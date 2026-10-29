@@ -25,6 +25,8 @@ RuiC-PoseAtlas 本身是一个静态姿态参考图库：每组姿态提供 **�
 | 输入 | `pose`（图库选择）、`invert_mask` |
 | 输出 | `image` `IMAGE` · `mask` `MASK` · `pose_name` `STRING` |
 
+<img src="docs/node-loader.jpg" width="300" alt="PoseAtlas 姿态图库节点">
+
 节点上的 `pose` 原生是一个 1439 项的下拉框，前端已把它替换成 **「打开图库」** 按钮。点开是全屏面板：
 
 - **顶部 4 个系列**：性感全身(80) / 标准全身(73) / 上半身(80) / 双人(55)
@@ -38,6 +40,8 @@ RuiC-PoseAtlas 本身是一个静态姿态参考图库：每组姿态提供 **�
 ### PoseAtlas 姿态信息（`PoseAtlasInfo`）
 
 只要文字、不要图时用这个。输入 `pose` + `language`（zh / en / ja），输出 `pose_name` / `category` / `series`，方便拼进提示词。
+
+<img src="docs/node-info.jpg" width="300" alt="PoseAtlas 姿态信息节点">
 
 ---
 
