@@ -23,6 +23,13 @@ async function getAtlas() {
     const res = await fetch(API_DATA, { cache: "no-cache" });
     if (!res.ok) throw new Error("数据加载失败 " + res.status + " " + API_DATA);
     const data = await res.json();
+    // 探测图片是否已下载（版权原因不随仓库分发）
+    data._imagesReady = await new Promise((resolve) => {
+      const probe = new Image();
+      probe.onload = () => resolve(true);
+      probe.onerror = () => resolve(false);
+      probe.src = THUMB_BASE + data.entries[0].thumb.split("/").pop();
+    });
     ATLAS = data;
     return data;
   })();
@@ -153,6 +160,22 @@ function openGallery(node, widget, atlas) {
       </div>
     </div>`;
 
+  // 图片未下载时的提示条
+  if (atlas._imagesReady === false) {
+    const warn = document.createElement("div");
+    warn.style.cssText =
+      "padding:10px 16px;background:#3a2a12;border-bottom:1px solid #5a3f18;" +
+      "color:#e8c07a;font-size:12.5px;line-height:1.6;flex:none;";
+    warn.innerHTML =
+      "<b>图片尚未下载。</b>图片版权归原作者所有，不随本仓库分发。<br>" +
+      "请在节点目录执行 <code style='background:#2a1e0c;padding:1px 5px;border-radius:3px'>python scripts/download_images.py</code>，" +
+      "下载完成后重启 ComfyUI。当前可以浏览分类与名称，但无法输出图片。";
+    overlay.querySelector(".pa-panel").insertBefore(
+      warn,
+      overlay.querySelector(".pa-body")
+    );
+  }
+
   const $tabs = overlay.querySelector(".pa-tabs");
   const $side = overlay.querySelector(".pa-side");
   const $main = overlay.querySelector(".pa-main");
@@ -268,6 +291,15 @@ function openGallery(node, widget, atlas) {
       img.decoding = "async";
       img.src = THUMB_BASE + sel.thumb.split("/").pop();
       img.alt = sel.zh;
+      // 图片未下载时（版权原因不随仓库分发）显示占位，而不是破图
+      img.onerror = () => {
+        const ph = document.createElement("div");
+        ph.style.cssText =
+          "aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;" +
+          "background:#232833;color:#6b7285;font-size:11px;text-align:center;padding:8px;line-height:1.5;";
+        ph.textContent = "图片未下载";
+        img.replaceWith(ph);
+      };
       card.appendChild(img);
 
       const cap = document.createElement("div");

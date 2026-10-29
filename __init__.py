@@ -133,7 +133,12 @@ class PoseAtlasLoader:
 
         path = os.path.join(ATLAS_DIR, meta["file"].replace("/", os.sep))
         if not os.path.isfile(path):
-            raise FileNotFoundError(f"PoseAtlas: 图片缺失 {path}")
+            raise FileNotFoundError(
+                f"PoseAtlas: 图片未下载 —— {path}\n"
+                f"图片版权归原作者所有，不随本仓库分发。请先在节点目录执行：\n"
+                f"    python scripts/download_images.py\n"
+                f"下载完成后重启 ComfyUI。"
+            )
 
         img = Image.open(path)
         img.load()
