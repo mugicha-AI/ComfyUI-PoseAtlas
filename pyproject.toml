@@ -1,0 +1,19 @@
+[project]
+name = "comfyui-poseatlas"
+description = "ComfyUI node for RuiC-PoseAtlas: 288 pose groups / 1439 multi-angle mannequin reference images, with a visual gallery picker. Images are downloaded separately from the original source (copyright: giaaibusi)."
+version = "1.0.0"
+license = { text = "MIT" }
+dependencies = []
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-PoseAtlas"
+Icon = ""
+requires-comfyui = ">=0.3.0"
+
+[project.urls]
+Repository = "https://github.com/your-name/ComfyUI-PoseAtlas"

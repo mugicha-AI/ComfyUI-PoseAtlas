@@ -1,0 +1,21 @@
+﻿# 图片资产：版权归原作者，不随仓库分发
+web/atlas/img/*
+web/atlas/thumbs/*
+!web/atlas/img/.gitkeep
+!web/atlas/thumbs/.gitkeep
+
+# 下载临时文件
+*.part
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 编辑器
+.vscode/
+.idea/
