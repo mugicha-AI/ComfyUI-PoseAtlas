@@ -47,7 +47,7 @@ RuiC-PoseAtlas 本身是一个静态姿态参考图库：每组姿态提供 **�
 
 ```bash
 cd ComfyUI/custom_nodes
-git clone https://github.com/215365573/ComfyUI-PoseAtlas.git
+git clone https://github.com/mugicha-AI/ComfyUI-PoseAtlas.git
 ```
 
 没有 git 的话，在 GitHub 页面点 `Code → Download ZIP`，解压到 `ComfyUI/custom_nodes/ComfyUI-PoseAtlas`。
@@ -148,6 +148,21 @@ PoseAtlas 姿态图库 → image → TextEncodeQwenImage21 的 images.image_1
 
 ---
 
+## 没有本地 GPU？
+
+这个节点本身很轻（只读图，不跑模型），但配套的 ControlNet / 编辑模型需要显存。
+手头没有能跑 ComfyUI 的机器时，可以用云端 ComfyUI：
+
+| 平台 | 特点 |
+|---|---|
+| [RunningHub](https://www.runninghub.ai/?inviteCode=rh-v1603) | 云端 ComfyUI，跑在线工作流，不用自己装环境 |
+| [ZZAI 真真AI](https://www.zzai.app/?aff=bFpY) | 一站式 AI 创作平台，画布 Agent 一句话搭流程，兼容 OpenAI 的 API 接入 |
+
+> 以上链接含邀请码，通过它注册我会获得一点返利，不影响你的使用成本。
+> 不通过链接直接访问官网同样可用。
+
+---
+
 ## 已知限制
 
 | 限制 | 原因 | 建议 |
@@ -186,6 +201,13 @@ PoseAtlas 姿态图库 → image → TextEncodeQwenImage21 的 images.image_1
 - 姿态图片与原始数据：ギア (@giaaibusi)
 - 数据整理、三语名称、图库前端：HRuiCcc / RuiC-PoseAtlas
 - 抽骨架节点：kijai / ComfyUI-WanAnimatePreprocess
+
+## 关于作者
+
+- GitHub：[@mugicha-AI](https://github.com/mugicha-AI)
+- 更多 ComfyUI 相关工作流与教程会陆续发在这里
+
+如果这个节点帮你省了找参考图的时间，欢迎点个 ⭐ Star。
 
 ## License
 

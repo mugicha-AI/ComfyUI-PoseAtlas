@@ -16,4 +16,5 @@ Icon = ""
 requires-comfyui = ">=0.3.0"
 
 [project.urls]
-Repository = "https://github.com/215365573/ComfyUI-PoseAtlas"
+Repository = "https://github.com/mugicha-AI/ComfyUI-PoseAtlas"
+Homepage = "https://github.com/mugicha-AI/ComfyUI-PoseAtlas"
