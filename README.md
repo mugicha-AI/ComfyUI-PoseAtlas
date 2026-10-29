@@ -147,8 +147,22 @@ PoseAtlas 姿态图库 → image → TextEncodeQwenImage21 的 images.image_1
 
 ### 示例工作流
 
-`examples/basic_loader.json` —— 最小可用工作流（图库 → 保存图像）。
-拖进 ComfyUI 即可，或从菜单 `工作流 → 打开` 载入。
+`examples/` 下有三个工作流，拖进 ComfyUI 或从菜单 `工作流 → 打开` 载入：
+
+| 文件 | 链路 | 底模 |
+|---|---|---|
+| `basic_loader.json` | 图库 → 保存图像（最小示例） | 无 |
+| `Flux3Klein-PoseAtlas.json` | 图库 + 参考图 → 提示词自动改写 → 出图 → 原图/结果对比输出 | Flux3 Klein |
+| `QW2.1-PoseAtlas.json` | 图库 + 参考图 → 提示词自动改写 → 编辑出图 → 原图/结果对比输出 | Qwen-Image 2.1 |
+
+两个完整示例的工作方式相同：`PoseAtlasLoader` 提供姿态线稿，再喂 1–2 张角色/风格参考图，
+先走一遍提示词改写 LLM 把姿态描述写进提示词，然后出图，最后把「参考图 | 生成结果」拼在一起保存。
+
+注意事项：
+
+- 依赖 `rgthree-comfy`、`comfyui-easy-use` 等常见自定义节点，缺什么 ComfyUI 会红框提示
+- 工作流里的模型文件名是我本机的量化版命名（如 `qwen_image_2.1_int8_convrot`），导入后请换成你自己下载的对应模型
+- 两个示例都加载了 `multiple_angles` LoRA（增强多角度姿态跟随），没有的话可以去掉该节点
 
 ---
 
