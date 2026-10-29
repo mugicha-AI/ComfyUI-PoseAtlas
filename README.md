@@ -47,7 +47,7 @@ RuiC-PoseAtlas 本身是一个静态姿态参考图库：每组姿态提供 **�
 
 ```bash
 cd ComfyUI/custom_nodes
-git clone https://github.com/<your-name>/ComfyUI-PoseAtlas.git
+git clone https://github.com/215365573/ComfyUI-PoseAtlas.git
 ```
 
 没有 git 的话，在 GitHub 页面点 `Code → Download ZIP`，解压到 `ComfyUI/custom_nodes/ComfyUI-PoseAtlas`。
