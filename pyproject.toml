@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-poseatlas"
-description = "ComfyUI node for RuiC-PoseAtlas: 288 pose groups / 1439 multi-angle mannequin references in two renders (line art + depth map), with a visual gallery picker. Full-size images are downloaded separately from the original sources (copyright: giaaibusi)."
-version = "1.1.0"
+description = "ComfyUI node for RuiC-PoseAtlas: 288 pose groups / 1439 multi-angle mannequin references in two renders (line art + depth map), with a trilingual (中/EN/日本語) visual gallery picker. Full-size images are downloaded separately from the original sources (copyright: giaaibusi)."
+version = "1.2.0"
 license = { text = "MIT" }
 dependencies = []
 classifiers = [
