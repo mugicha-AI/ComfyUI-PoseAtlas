@@ -9,6 +9,14 @@
 
 ![图库面板](docs/gallery.jpg)
 
+<details><summary>深度图界面</summary>
+
+![深度图库面板](docs/gallery-depth.jpg)
+
+深度模式下每张卡片右上角是 **`↓ 原图`**，点一下取回该角度的 900×1200 原图；已下载的显示 **`✓ 已下载`**。
+
+</details>
+
 ---
 
 ## 这是什么
@@ -37,6 +45,10 @@ RuiC-PoseAtlas 本身是一个静态姿态参考图库：每组姿态提供 **�
 | 输出 | `image` `IMAGE` · `mask` `MASK` · `pose_name` `STRING` |
 
 <img src="docs/node-loader.jpg" width="300" alt="PoseAtlas 姿态图库节点">
+
+深度模式下节点上直接画出深度缩略图，双人姿势的前后遮挡一眼可见：
+
+<img src="docs/node-depth.jpg" width="300" alt="PoseAtlas 姿态图库节点（深度模式）">
 
 节点上的 `pose` 原生是一个 1439 项的下拉框，前端已把它替换成 **「打开图库」** 按钮。点开是全屏面板：
 

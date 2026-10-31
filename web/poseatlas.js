@@ -33,13 +33,16 @@ function renderOf(node) {
   return w && w.value === RENDER_DEPTH ? RENDER_DEPTH : RENDER_LINE;
 }
 
-/* 深度原图是否已在本地：探测 depth/img/<stem>.png，结果缓存 */
+/* 深度原图是否已在本地：探测 depth/img/<stem>.png，结果缓存。
+   ComfyUI 静态文件走浏览器缓存，所以探测 URL 带一个「本次页面加载」的指纹，
+   避免沿用上次会话的缓存结果（那时图可能还没下载）。 */
 const DEPTH_LOCAL = new Map();
-const DEPTH_BUST = new Map(); // 下载成功后加时间戳，绕过浏览器缓存
+const SESSION_TAG = Date.now().toString(36);
+const DEPTH_BUST = new Map(); // 下载成功后换成新的指纹，跳过旧缓存
 
 function depthFullUrl(entry) {
-  const bust = DEPTH_BUST.get(entry.depth_file);
-  return EXT_BASE + entry.depth_file + (bust ? `?t=${bust}` : "");
+  const tag = DEPTH_BUST.get(entry.depth_file) || SESSION_TAG;
+  return EXT_BASE + entry.depth_file + `?v=${tag}`;
 }
 
 function probeDepthLocal(entry) {
