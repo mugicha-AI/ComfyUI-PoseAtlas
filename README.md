@@ -303,6 +303,22 @@ PoseAtlas 图库 → image → TextEncodeQwenImage21 的 images.image_1
 - 数据整理、三语名称、图库前端：HRuiCcc / RuiC-PoseAtlas
 - 抽骨架节点：kijai / ComfyUI-WanAnimatePreprocess
 
+## 视频介绍
+
+我更了两期视频讲这个节点的用法，挑一个平台看：
+
+| 平台 | 链接 |
+|---|---|
+| Bilibili（中文） | [PoseAtlas 实测：1439 张多角度人台线稿，我把它做成了 ComfyUI 节点](https://www.bilibili.com/video/BV1CFxi6uEhk/) |
+| YouTube | [PoseAtlas 实测：1439 张多角度人台线稿，我把它做成了 ComfyUI 节点](https://www.youtube.com/watch?v=3_gDBeM9o6U) |
+
+```
+PoseAtlas 实测：1439 张多角度人台线稿，我把它做成了 ComfyUI 节点
+```
+
+视频里覆盖：图库面板怎么用、深度图和线稿的差别、接 ControlNet 抽骨架的实际参数，
+以及双人姿势为什么建议走深度。文字版见上面的「怎么用」。
+
 ## 关于作者
 
 - GitHub：[@mugicha-AI](https://github.com/mugicha-AI)

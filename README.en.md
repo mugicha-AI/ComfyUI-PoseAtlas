@@ -345,6 +345,24 @@ and the content will be removed promptly.
 - Data preparation, trilingual names, gallery front-end: HRuiCcc / RuiC-PoseAtlas
 - Skeleton node: kijai / ComfyUI-WanAnimatePreprocess
 
+## Video walkthrough
+
+Two videos cover this node — pick whichever platform you prefer:
+
+| Platform | Link |
+|---|---|
+| Bilibili (Chinese) | [PoseAtlas 实测：1439 张多角度人台线稿，我把它做成了 ComfyUI 节点](https://www.bilibili.com/video/BV1CFxi6uEhk/) |
+| YouTube | [PoseAtlas 实测：1439 张多角度人台线稿，我把它做成了 ComfyUI 节点](https://www.youtube.com/watch?v=3_gDBeM9o6U) |
+
+```
+PoseAtlas 实测：1439 张多角度人台线稿，我把它做成了 ComfyUI 节点
+```
+*(Title as published: "PoseAtlas hands-on — 1439 multi-angle mannequin references, turned into a ComfyUI node". Both videos are in Chinese.)*
+
+They walk through the gallery panel, the difference between line art and depth
+maps, the exact ControlNet skeleton-extraction settings, and why couple poses are
+better handled through depth. For the written version see "Usage" above.
+
 ## About the author
 
 - GitHub: [@mugicha-AI](https://github.com/mugicha-AI)

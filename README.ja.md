@@ -331,6 +331,24 @@ PoseAtlas ギャラリー → image → TextEncodeQwenImage21 の images.image_1
 - データ整理、3 言語名、ギャラリーのフロントエンド：HRuiCcc / RuiC-PoseAtlas
 - 骨格抽出ノード：kijai / ComfyUI-WanAnimatePreprocess
 
+## 動画での解説
+
+このノードの使い方を 2 本の動画で解説しています。お好みのプラットフォームでどうぞ：
+
+| プラットフォーム | リンク |
+|---|---|
+| Bilibili（中国語） | [PoseAtlas 実測：1439 枚のマルチアングル・マネキン線画を ComfyUI ノードにしました](https://www.bilibili.com/video/BV1CFxi6uEhk/) |
+| YouTube | [PoseAtlas 実測：1439 枚のマルチアングル・マネキン線画を ComfyUI ノードにしました](https://www.youtube.com/watch?v=3_gDBeM9o6U) |
+
+```
+PoseAtlas 实测：1439 张多角度人台线稿，我把它做成了 ComfyUI 节点
+```
+*（公開されているタイトルは上記の中国語で、意味は「PoseAtlas 実測 — 1439 枚のマルチアングルなマネキン線画を ComfyUI ノードにした」。音声は中国語です）*
+
+内容は、ギャラリーパネルの使い方、線画と深度の違い、ControlNet で骨格を抽出する際の
+実際のパラメータ、そして 2 人のポーズで深度を使うべき理由です。
+文章版は上記の「使い方」を参照してください。
+
 ## 作者について
 
 - GitHub：[@mugicha-AI](https://github.com/mugicha-AI)
