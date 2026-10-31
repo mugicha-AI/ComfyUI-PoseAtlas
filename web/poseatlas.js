@@ -4,14 +4,62 @@ import { app } from "../../scripts/app.js";
  * ComfyUI-PoseAtlas — 图库选择器
  * 把 PoseAtlasLoader / PoseAtlasInfo 的 pose 下拉框替换成可视化图库面板：
  *   系列 tab → 分类 → 缩略图网格 → 点选后写回下拉值并显示大图预览。
+ *
+ * 支持「线稿 / 深度」两种渲染。深度原图不随仓库分发（只带 300×400 缩略图），
+ * 卡片右上角的「↓ 原图」按钮会调用节点自带的 /poseatlas/depth 接口，由服务端
+ * 取回 900×1200 原图写入 depth/img/。
+ *
  * 数据与图片都来自本节点自带的 web/atlas 目录（/extensions/ComfyUI-PoseAtlas/atlas/）。
  */
 
 const NODE_TYPES = new Set(["PoseAtlasLoader", "PoseAtlasInfo"]);
 const WIDGET_NAME = "pose";
+const RENDER_WIDGET = "render";
 const EXT_BASE = "/extensions/ComfyUI-PoseAtlas/atlas/";
 const API_DATA = EXT_BASE + "index.json";
-const THUMB_BASE = EXT_BASE + "thumbs/";
+const DEPTH_API = "/poseatlas/depth";
+
+const RENDER_LINE = "线稿";
+const RENDER_DEPTH = "深度";
+
+/* entry.thumb / entry.depth_thumb 都是相对 atlas 目录的路径 */
+function thumbUrl(entry, render) {
+  if (render === RENDER_DEPTH && entry.depth_thumb) return EXT_BASE + entry.depth_thumb;
+  return EXT_BASE + entry.thumb;
+}
+
+function renderOf(node) {
+  const w = node && node.widgets && node.widgets.find((x) => x.name === RENDER_WIDGET);
+  return w && w.value === RENDER_DEPTH ? RENDER_DEPTH : RENDER_LINE;
+}
+
+/* 深度原图是否已在本地：探测 depth/img/<stem>.png，结果缓存 */
+const DEPTH_LOCAL = new Map();
+const DEPTH_BUST = new Map(); // 下载成功后加时间戳，绕过浏览器缓存
+
+function depthFullUrl(entry) {
+  const bust = DEPTH_BUST.get(entry.depth_file);
+  return EXT_BASE + entry.depth_file + (bust ? `?t=${bust}` : "");
+}
+
+function probeDepthLocal(entry) {
+  if (!entry || !entry.depth_file) return Promise.resolve(false);
+  if (DEPTH_LOCAL.has(entry.depth_file)) {
+    return Promise.resolve(DEPTH_LOCAL.get(entry.depth_file));
+  }
+  return new Promise((resolve) => {
+    const probe = new Image();
+    probe.onload = () => {
+      DEPTH_LOCAL.set(entry.depth_file, true);
+      resolve(true);
+    };
+    probe.onerror = () => {
+      DEPTH_LOCAL.set(entry.depth_file, false);
+      resolve(false);
+    };
+    probe.src = depthFullUrl(entry);
+  });
+}
 
 let ATLAS = null;
 let ATLAS_LOADING = null;
@@ -23,12 +71,12 @@ async function getAtlas() {
     const res = await fetch(API_DATA, { cache: "no-cache" });
     if (!res.ok) throw new Error("数据加载失败 " + res.status + " " + API_DATA);
     const data = await res.json();
-    // 探测图片是否已下载（版权原因不随仓库分发）
+    // 探测线稿缩略图是否已下载（版权原因不随仓库分发）
     data._imagesReady = await new Promise((resolve) => {
       const probe = new Image();
       probe.onload = () => resolve(true);
       probe.onerror = () => resolve(false);
-      probe.src = THUMB_BASE + data.entries[0].thumb.split("/").pop();
+      probe.src = thumbUrl(data.entries[0], RENDER_LINE);
     });
     ATLAS = data;
     return data;
@@ -56,6 +104,16 @@ const CSS = `
 }
 .pa-title { font-size: 15px; font-weight: 600; letter-spacing: .02em; }
 .pa-sub { font-size: 12px; color: #8b93a5; margin-left: 4px; }
+.pa-render {
+  display: flex; gap: 3px; padding: 3px;
+  background: #1e2129; border: 1px solid #333846; border-radius: 8px;
+}
+.pa-rbtn {
+  padding: 4px 12px; border-radius: 6px; font-size: 12.5px; cursor: pointer;
+  color: #a9b1c1; user-select: none; white-space: nowrap;
+}
+.pa-rbtn:hover { color: #dfe4ee; }
+.pa-rbtn.on { background: #2b4a86; color: #fff; }
 .pa-search {
   margin-left: auto; width: 240px; padding: 7px 10px;
   background: #1e2129; border: 1px solid #333846; border-radius: 7px;
@@ -79,41 +137,53 @@ const CSS = `
 }
 .pa-tab:hover { border-color: #4a7dd6; color: #dfe4ee; }
 .pa-tab.on { background: #2b4a86; border-color: #4a7dd6; color: #fff; }
-.pa-body { display: flex; flex: 1; min-height: 0; }
+.pa-body { flex: 1; display: flex; min-height: 0; }
 .pa-side {
-  width: 210px; flex: none; overflow-y: auto; padding: 10px 8px 16px;
+  width: 180px; flex: none; overflow: auto; padding: 10px 8px;
   border-right: 1px solid #23262e; background: #14161b;
 }
+.pa-side-hd { font-size: 11px; color: #6b7285; padding: 2px 8px 8px; letter-spacing: .06em; }
 .pa-cat {
-  padding: 7px 10px; border-radius: 6px; font-size: 13px; cursor: pointer;
-  color: #a9b1c1; display: flex; justify-content: space-between; gap: 6px;
-  user-select: none;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 10px; border-radius: 6px; font-size: 12.5px; cursor: pointer;
+  color: #a9b1c1; user-select: none; margin-bottom: 2px;
 }
-.pa-cat:hover { background: #1e2129; color: #e6e8ee; }
-.pa-cat.on { background: #26334d; color: #fff; }
-.pa-cat .n { font-size: 11px; color: #6b7285; }
-.pa-cat.on .n { color: #9fb4dd; }
-.pa-main { flex: 1; overflow-y: auto; padding: 14px; min-width: 0; }
+.pa-cat:hover { background: #1e2129; color: #dfe4ee; }
+.pa-cat.on { background: #2b4a86; color: #fff; }
+.pa-cat .n { font-size: 11px; opacity: .65; font-variant-numeric: tabular-nums; }
+.pa-main { flex: 1; overflow: auto; padding: 14px; min-width: 0; }
 .pa-grid {
-  display: grid; gap: 10px;
-  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
 }
 .pa-card {
-  background: #1b1e25; border: 1px solid #2c303a; border-radius: 8px;
-  overflow: hidden; cursor: pointer; transition: border-color .12s, transform .12s;
+  position: relative;
+  border: 1px solid #2c303a; border-radius: 9px; overflow: hidden;
+  background: #1a1d23; cursor: pointer; transition: border-color .12s;
 }
-.pa-card:hover { border-color: #4a7dd6; transform: translateY(-2px); }
-.pa-card.on { border-color: #6ea8ff; box-shadow: 0 0 0 1px #6ea8ff inset; }
-.pa-card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; background: #fff; }
-.pa-card .cap { padding: 5px 7px; font-size: 11px; line-height: 1.35; color: #b9c0cf; }
-.pa-card .cap b { display: block; color: #e6e8ee; font-weight: 600; font-size: 11.5px; }
+.pa-card:hover { border-color: #4a7dd6; }
+.pa-card.on { border-color: #4a7dd6; box-shadow: 0 0 0 2px rgba(74,125,214,.35); }
+.pa-card img { display: block; width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #232833; }
+.pa-card .cap { padding: 6px 7px; font-size: 11.5px; line-height: 1.45; color: #9aa3b4; }
+.pa-card .cap b { display: block; color: #e6e8ee; font-weight: 600; margin-bottom: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pa-dl {
+  position: absolute; top: 6px; right: 6px; z-index: 2;
+  padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;
+  background: rgba(18,20,25,.88); border: 1px solid #3a4150; color: #cfd6e4;
+  cursor: pointer; user-select: none; white-space: nowrap;
+}
+.pa-dl:hover { background: #2b4a86; border-color: #4a7dd6; color: #fff; }
+.pa-dl.done { background: rgba(24,52,34,.92); border-color: #3f7a52; color: #8fe0a8; }
+.pa-dl.done:hover { background: rgba(24,52,34,.92); }
+.pa-dl.busy { opacity: .65; }
 .pa-empty { padding: 40px; text-align: center; color: #6b7285; font-size: 13px; }
 .pa-foot {
-  padding: 9px 16px; border-top: 1px solid #23262e; font-size: 12px;
-  color: #8b93a5; flex: none; display: flex; gap: 12px; align-items: center;
+  display: flex; align-items: center; gap: 12px; padding: 9px 16px;
+  border-top: 1px solid #2c303a; font-size: 12px; color: #8b93a5; flex: none;
 }
-.pa-foot .path { color: #6b7285; font-family: ui-monospace, monospace; font-size: 11px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pa-foot .picked { color: #e6e8ee; font-weight: 600; }
+.pa-foot .path { margin-left: auto; font-family: ui-monospace, monospace; font-size: 11px; opacity: .6; }
 `;
 
 let cssInjected = false;
@@ -125,11 +195,39 @@ function injectCSS() {
   cssInjected = true;
 }
 
+/* 请求服务端下载某张深度原图，返回 {ok, bytes} */
+async function requestDepthDownload(entry) {
+  const stem = entry.depth_file.split("/").pop().replace(/\.png$/, "");
+  const res = await fetch(DEPTH_API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: stem }),
+  });
+  let payload = {};
+  try {
+    payload = await res.json();
+  } catch (e) {
+    payload = {};
+  }
+  if (!res.ok || !payload.ok) {
+    throw new Error(payload.error || `HTTP ${res.status}`);
+  }
+  DEPTH_LOCAL.set(entry.depth_file, true);
+  DEPTH_BUST.set(entry.depth_file, Date.now());
+  return payload;
+}
+
 function openGallery(node, widget, atlas) {
   injectCSS();
 
   const picked0 = widget.value || "";
-  const state = { series: null, category: null, q: "", current: picked0 };
+  const state = {
+    series: null,
+    category: null,
+    q: "",
+    current: picked0,
+    render: renderOf(node),
+  };
 
   const cur = atlas.entries.find((e) => e.label === picked0);
   if (cur) {
@@ -146,6 +244,7 @@ function openGallery(node, widget, atlas) {
       <div class="pa-head">
         <span class="pa-title">PoseAtlas 姿态图库</span>
         <span class="pa-sub">${atlas.total} 张 · ${atlas.poses} 组姿态</span>
+        <div class="pa-render"></div>
         <input class="pa-search" type="text" placeholder="搜索：姿态名 / 编号 / 分类" />
         <button class="pa-close" title="关闭">×</button>
       </div>
@@ -160,16 +259,16 @@ function openGallery(node, widget, atlas) {
       </div>
     </div>`;
 
-  // 图片未下载时的提示条
+  // 线稿图片未下载时的提示条
   if (atlas._imagesReady === false) {
     const warn = document.createElement("div");
     warn.style.cssText =
       "padding:10px 16px;background:#3a2a12;border-bottom:1px solid #5a3f18;" +
       "color:#e8c07a;font-size:12.5px;line-height:1.6;flex:none;";
     warn.innerHTML =
-      "<b>图片尚未下载。</b>图片版权归原作者所有，不随本仓库分发。<br>" +
+      "<b>线稿图片尚未下载。</b>图片版权归原作者所有，不随本仓库分发。<br>" +
       "请在节点目录执行 <code style='background:#2a1e0c;padding:1px 5px;border-radius:3px'>python scripts/download_images.py</code>，" +
-      "下载完成后重启 ComfyUI。当前可以浏览分类与名称，但无法输出图片。";
+      "下载完成后重启 ComfyUI。深度缩略图已随仓库提供，可直接浏览。";
     overlay.querySelector(".pa-panel").insertBefore(
       warn,
       overlay.querySelector(".pa-body")
@@ -179,6 +278,7 @@ function openGallery(node, widget, atlas) {
   const $tabs = overlay.querySelector(".pa-tabs");
   const $side = overlay.querySelector(".pa-side");
   const $main = overlay.querySelector(".pa-main");
+  const $render = overlay.querySelector(".pa-render");
   const $search = overlay.querySelector(".pa-search");
   const $picked = overlay.querySelector(".picked");
   const $path = overlay.querySelector(".path");
@@ -195,6 +295,35 @@ function openGallery(node, widget, atlas) {
     if (e.target === overlay) close();
   });
   overlay.querySelector(".pa-close").addEventListener("click", close);
+
+  function renderRenderSwitch() {
+    $render.innerHTML = "";
+    for (const mode of [RENDER_LINE, RENDER_DEPTH]) {
+      const b = document.createElement("div");
+      b.className = "pa-rbtn" + (mode === state.render ? " on" : "");
+      b.textContent = mode;
+      b.title = mode === RENDER_DEPTH
+        ? "深度图：白色靠近镜头，适合 ControlNet depth"
+        : "线稿：人台线稿原图";
+      b.onclick = () => {
+        state.render = mode;
+        const w = node.widgets && node.widgets.find((x) => x.name === RENDER_WIDGET);
+        if (w) {
+          w.value = mode;
+          if (w.callback) {
+            try { w.callback(mode); } catch (e) {}
+          }
+        }
+        node.setDirtyCanvas && node.setDirtyCanvas(true, true);
+        node._paImg = null;
+        node._paImgSrc = null;
+        renderRenderSwitch();
+        renderMain();
+        updateFoot(atlas.entries.find((e) => e.label === state.current));
+      };
+      $render.appendChild(b);
+    }
+  }
 
   function renderTabs() {
     $tabs.innerHTML = "";
@@ -216,6 +345,12 @@ function openGallery(node, widget, atlas) {
     $side.innerHTML = "";
     const cats = atlas.categoriesBySeries[state.series] || [];
     const total = cats.reduce((a, c) => a + c.count, 0);
+
+    const hd = document.createElement("div");
+    hd.className = "pa-side-hd";
+    hd.textContent = "分类";
+    $side.appendChild(hd);
+
     const all = document.createElement("div");
     all.className = "pa-cat" + (state.category === null ? " on" : "");
     all.innerHTML = `<span>全部</span><span class="n">${total}</span>`;
@@ -224,6 +359,7 @@ function openGallery(node, widget, atlas) {
       render();
     };
     $side.appendChild(all);
+
     for (const c of cats) {
       const el = document.createElement("div");
       el.className = "pa-cat" + (state.category === c.name ? " on" : "");
@@ -242,13 +378,9 @@ function openGallery(node, widget, atlas) {
       if (state.series && e.series !== state.series) return false;
       if (state.category && e.category !== state.category) return false;
       if (!q) return true;
-      return (
-        e.label.toLowerCase().includes(q) ||
-        e.zh.toLowerCase().includes(q) ||
-        e.en.toLowerCase().includes(q) ||
-        e.ja.toLowerCase().includes(q) ||
-        e.no.toLowerCase().includes(q)
-      );
+      const hay = [e.label, e.zh, e.en, e.ja, e.no, e.id]
+        .filter(Boolean).join(" ").toLowerCase();
+      return hay.includes(q);
     });
   }
 
@@ -266,6 +398,46 @@ function openGallery(node, widget, atlas) {
     renderMain();
   }
 
+  /* 卡片右上角的下载按钮：把该角度的深度原图取回 depth/img/ */
+  function makeDownloadButton(entry) {
+    const btn = document.createElement("span");
+    btn.className = "pa-dl";
+    btn.textContent = "↓ 原图";
+    btn.title = "下载该角度的深度原图（900×1200），存到 web/atlas/depth/img/";
+
+    probeDepthLocal(entry).then((has) => {
+      if (has) {
+        btn.classList.add("done");
+        btn.textContent = "✓ 已下载";
+      }
+    });
+
+    btn.onclick = async (ev) => {
+      ev.stopPropagation();
+      ev.preventDefault();
+      if (btn.classList.contains("busy") || btn.classList.contains("done")) return;
+      btn.classList.add("busy");
+      btn.textContent = "下载中…";
+      try {
+        await requestDepthDownload(entry);
+        btn.classList.remove("busy");
+        btn.classList.add("done");
+        btn.textContent = "✓ 已下载";
+        // 该角度正在被选中时，让节点预览切到刚下好的原图
+        if (state.current === entry.label) {
+          node._paImg = null;
+          node._paImgSrc = null;
+          node.setDirtyCanvas && node.setDirtyCanvas(true, true);
+        }
+      } catch (e) {
+        btn.classList.remove("busy");
+        btn.textContent = "↓ 重试";
+        btn.title = "下载失败：" + e.message;
+      }
+    };
+    return btn;
+  }
+
   function renderMain() {
     const list = filtered();
     $main.innerHTML = "";
@@ -280,6 +452,7 @@ function openGallery(node, widget, atlas) {
       if (!byPose.has(e.id)) byPose.set(e.id, []);
       byPose.get(e.id).push(e);
     }
+
     for (const variants of byPose.values()) {
       const first = variants[0];
       const sel = variants.find((v) => v.label === state.current) || first;
@@ -289,9 +462,8 @@ function openGallery(node, widget, atlas) {
       const img = document.createElement("img");
       img.loading = "lazy";
       img.decoding = "async";
-      img.src = THUMB_BASE + sel.thumb.split("/").pop();
+      img.src = thumbUrl(sel, state.render);
       img.alt = sel.zh;
-      // 图片未下载时（版权原因不随仓库分发）显示占位，而不是破图
       img.onerror = () => {
         const ph = document.createElement("div");
         ph.style.cssText =
@@ -301,6 +473,11 @@ function openGallery(node, widget, atlas) {
         img.replaceWith(ph);
       };
       card.appendChild(img);
+
+      // 深度模式给下载按钮（线稿走 download_images.py 批量下）
+      if (state.render === RENDER_DEPTH) {
+        card.appendChild(makeDownloadButton(sel));
+      }
 
       const cap = document.createElement("div");
       cap.className = "cap";
@@ -341,11 +518,15 @@ function openGallery(node, widget, atlas) {
       $path.textContent = "";
       return;
     }
-    $picked.textContent = `${entry.no} ${entry.zh} · ${entry.angle_name}`;
-    $path.textContent = entry.file;
+    let desc = `${entry.no} ${entry.zh} · ${entry.angle_name}`;
+    if (state.render === RENDER_DEPTH) desc += " · 深度";
+    $picked.textContent = desc;
+    $path.textContent =
+      state.render === RENDER_DEPTH ? (entry.depth_file || entry.file) : entry.file;
   }
 
   function render() {
+    renderRenderSwitch();
     renderTabs();
     renderSide();
     renderMain();
@@ -389,7 +570,8 @@ function drawPreview(node, ctx) {
   const entry = ATLAS && ATLAS.entries && ATLAS.entries.find((e) => e.label === widget.value);
   if (!entry) return;
 
-  const url = THUMB_BASE + entry.thumb.split("/").pop();
+  const render = renderOf(node);
+  const url = thumbUrl(entry, render);
   let img = node._paImg;
   if (!img || node._paImgSrc !== url) {
     img = new Image();

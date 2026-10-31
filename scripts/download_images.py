@@ -5,22 +5,22 @@ ComfyUI-PoseAtlas 图片下载脚本
 ==============================
 
 本仓库**不包含**姿态图片（版权归原作者 ギア @giaaibusi 所有，禁止再分发）。
-运行本脚本，从原作者公开的 RuiC-PoseAtlas 仓库把 1439 张图片下载到你本地。
+运行本脚本，从原作者公开的 RuiC-PoseAtlas 仓库把 1439 张线稿图片下载到你本地。
 
 用法（在 ComfyUI-PoseAtlas 节点目录下执行）：
 
-    python scripts/download_images.py
-
-可选参数：
-
-    --thumbs-only     只下缩略图（约 22 MB，能浏览图库但不能输出原图）
-    --workers 8       并发数，默认 8
-    --dry-run         只检查缺哪些，不下载
+    python scripts/download_images.py               # 线稿缩略图 + 原图
+    python scripts/download_images.py --thumbs-only # 只下缩略图（约 22 MB）
+    python scripts/download_images.py --workers 8   # 并发数，默认 8
+    python scripts/download_images.py --dry-run     # 只检查缺哪些
 
 下载完成后目录应为：
 
     web/atlas/img/     1439 张 900x1200 PNG
     web/atlas/thumbs/  1439 张 300x400 JPEG
+
+深度图（depth/）不在此脚本范围内：深度缩略图已随仓库提供，原图请在节点的
+图库面板里点「↓ 原图」按钮逐张下载（走节点内置的 /poseatlas/depth 接口）。
 """
 
 import argparse
@@ -86,7 +86,7 @@ def fetch(rel_path, timeout=60, retries=3):
     raise last if last else RuntimeError("unknown error")
 
 
-def one(item, total, thumbs_only, dry_run):
+def one(item, total, dry_run):
     rel, dst = item
     if os.path.isfile(dst) and os.path.getsize(dst) > 512:
         with _lock:
@@ -148,7 +148,7 @@ def main():
 
     total = len(jobs)
     print("=" * 60)
-    print("ComfyUI-PoseAtlas 图片下载")
+    print("ComfyUI-PoseAtlas 线稿图片下载")
     print("=" * 60)
     print("目标目录: %s" % ATLAS_DIR)
     print("待处理:   %d 个文件%s" % (total, "（仅缩略图）" if args.thumbs_only else ""))
@@ -156,11 +156,13 @@ def main():
     print("")
     print("说明：图片版权归原作者 ギア (@giaaibusi) 所有，")
     print("      本脚本仅从原作者公开地址下载供本地创作参考，禁止再分发。")
+    print("      深度图不在本脚本范围：缩略图已随仓库提供，")
+    print("      原图请在节点图库面板里点「↓ 原图」逐张下载。")
     print("")
 
     t0 = time.time()
     with ThreadPoolExecutor(max_workers=args.workers) as ex:
-        futures = [ex.submit(one, j, total, args.thumbs_only, args.dry_run) for j in jobs]
+        futures = [ex.submit(one, j, total, args.dry_run) for j in jobs]
         for _ in as_completed(futures):
             pass
 
@@ -187,7 +189,7 @@ def main():
 
     print("")
     print("全部就绪。重启 ComfyUI，新建 PoseAtlas 节点，")
-    print("点「打开图库」即可浏览 288 组姿态。")
+    print("点「打开图库」即可浏览 288 组姿态，切换「深度」看深度图。")
     return 0
 
 

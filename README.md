@@ -1,9 +1,11 @@
 # ComfyUI-PoseAtlas
 
-把 [RuiC-PoseAtlas](https://github.com/HRuiCcc/RuiC-PoseAtlas) 的 **288 组人体姿态 / 1439 张多角度人台线稿** 做成了 ComfyUI 节点。
+把 [RuiC-PoseAtlas](https://github.com/HRuiCcc/RuiC-PoseAtlas) 的 **288 组人体姿态 / 1439 张多角度参考图** 做成了 ComfyUI 节点。
+每个姿态有两种渲染可选：**人台线稿**（POSE-DB-01）和**灰度深度图**（POSE-DB-02）。
 在图库里点一张图，直接输出 `IMAGE`，接 ControlNet、接图生图、接编辑模型都行。
 
-> ⚠️ **本仓库不含图片**。图片版权归原作者所有，请运行脚本从原地址下载（见下方「安装」第 3 步）。
+> ⚠️ **本仓库不含全尺寸原图**。图片版权归原作者所有，请按下方「安装」第 3 步下载。
+> 深度缩略图已随仓库提供（10.7 MB），开箱即可浏览；深度原图在面板里点「↓ 原图」逐张取回。
 
 ![图库面板](docs/gallery.jpg)
 
@@ -16,22 +18,33 @@ RuiC-PoseAtlas 本身是一个静态姿态参考图库：每组姿态提供 **�
 
 本项目把它的浏览体验搬进 ComfyUI：不用切浏览器、不用手动找文件、不用记住 1439 个文件名。
 
+**v1.1 新增深度图**：同一批 1439 个变体（id 一一对应）多了一套灰度深度渲染，白色代表靠近镜头。
+线稿适合抽骨架，深度图适合 ControlNet depth —— 双人姿势的前后遮挡关系在深度图里是分层的，
+这是线稿给不了的。
+
+| 渲染 | 来源 | 规格 | 适用 |
+|---|---|---|---|
+| 线稿 | [POSE-DB-01](https://ai-pose-gallery.pages.dev/) | 900×1200 PNG | 抽骨架、图生图、编辑模型 |
+| 深度 | [POSE-DB-02](https://ai-pose-depth-gallery.pages.dev/) | 900×1200 灰度 PNG | ControlNet depth、需要前后关系的合成 |
+
 ## 两个节点
 
 ### PoseAtlas 姿态图库（`PoseAtlasLoader`）
 
 | | |
 |---|---|
-| 输入 | `pose`（图库选择）、`invert_mask` |
+| 输入 | `pose`（图库选择）、`render`（线稿 / 深度）、`invert_mask` |
 | 输出 | `image` `IMAGE` · `mask` `MASK` · `pose_name` `STRING` |
 
 <img src="docs/node-loader.jpg" width="300" alt="PoseAtlas 姿态图库节点">
 
 节点上的 `pose` 原生是一个 1439 项的下拉框，前端已把它替换成 **「打开图库」** 按钮。点开是全屏面板：
 
+- **渲染切换**：标题栏右侧 `线稿 / 深度`，切换后所有缩略图一起换
 - **顶部 4 个系列**：性感全身(80) / 标准全身(73) / 上半身(80) / 双人(55)
 - **左侧分类**：随系列动态切换，共 26 个子分类（站姿、坐姿、趴卧、跪立・四肢着地、蹲姿、前倾、扭身……）
 - **缩略图网格**：同一姿态的 5 个角度合成一张卡片，卡内小标签切换 正面 / 斜侧 / 侧面 / 俯视 / 仰视
+- **下载按钮**：深度模式下每张卡片右上角有 `↓ 原图`，点一下就把该角度的 900×1200 原图取回本地
 - **搜索框**：中 / 英 / 日名称、编号、分类都能搜，自动跨系列检索
 - **底部**：当前选中项的编号、中文名、角度、文件路径
 
@@ -58,7 +71,7 @@ git clone https://github.com/mugicha-AI/ComfyUI-PoseAtlas.git
 
 ### 2. 检查目录
 
-装完应该是这样（此时 `img/` 和 `thumbs/` 是空的）：
+装完应该是这样（此时 `img/`、`thumbs/`、`depth/img/` 是空的，`depth/thumbs/` 已经有 1439 张）：
 
 ```
 ComfyUI/custom_nodes/ComfyUI-PoseAtlas/
@@ -69,15 +82,18 @@ ComfyUI/custom_nodes/ComfyUI-PoseAtlas/
 └── web/
     ├── poseatlas.js
     └── atlas/
-        ├── poses.json        ← 姿态元数据（三语名称/分类/角度）
-        ├── index.json        ← 前端索引
-        ├── img/              ← 空，等你下载
-        └── thumbs/           ← 空，等你下载
+        ├── poses.json            ← 姿态元数据（三语名称/分类/角度）
+        ├── index.json            ← 前端索引（含深度路径与源站地址）
+        ├── img/                  ← 空，等你下载
+        ├── thumbs/               ← 空，等你下载
+        └── depth/
+            ├── img/              ← 空，深度原图按需下载
+            └── thumbs/           ← 1439 张 300×400，随仓库提供
 ```
 
-### 3. 下载图片（必须做，否则图库是空的）
+### 3. 下载线稿图片（必须做，否则线稿是空的）
 
-图片版权归原作者 **ギア (@giaaibusi)** 所有，本项目**不打包、不再分发**图片，
+线稿图片版权归原作者 **ギア (@giaaibusi)** 所有，本项目**不打包、不再分发**全尺寸图片，
 只提供脚本从原作者的公开仓库下载。
 
 ```bash
@@ -88,16 +104,23 @@ python scripts/download_images.py
 - 共 **2878 个文件**（1439 张 PNG 原图 + 1439 张缩略图），约 **660 MB**
 - 会自动在 6 个镜像间切换，某个超时就换下一个
 - 中断了直接重跑，已下载的会跳过，自动续传
-- 只想先看看界面：`python scripts/download_images.py --thumbs-only`（约 22 MB，能浏览但原图输出会报缺图）
+- 只想先看看界面：`python scripts/download_images.py --thumbs-only`（约 22 MB）
 
-下载完成后确认：
+### 4. 深度原图（按需，不批量）
 
-```
-web/atlas/img/     1439 个 .png
-web/atlas/thumbs/  1439 个 .jpg
-```
+深度图的**缩略图已经在仓库里**，装完就能在面板里看到全部 1439 张、能选、能输出（300×400）。
+要 900×1200 原图的话，在面板里切到「深度」模式，点卡片右上角的 **`↓ 原图`**，
+服务端会从源站取回该张并写入 `web/atlas/depth/img/`，此后一直用本地的。
 
-### 4. 重启 ComfyUI
+> 这里**不提供批量下载脚本**，是刻意的：源站明确写着
+> 「このデータベースの画像を一括でダウンロードすること（ツール等による自動取得を含む）と、
+> 取得した画像の再配布・転載・販売は禁止です」。逐张按需取回属于「生成时参考一张」的用法，
+> 批量抓取则不是。请只点你真正要用的那几张。
+>
+> 原图没下载时，节点会自动退回用缩略图输出，`pose_name` 后面会标注「深度缩略图，原图未下载」，
+> 所以不下载也能跑通流程，只是分辨率低。
+
+### 5. 重启 ComfyUI
 
 节点出现在右键菜单的 **`PoseAtlas`** 分类下，或双击画布搜索 `PoseAtlas`。
 
@@ -114,12 +137,12 @@ web/atlas/thumbs/  1439 个 .jpg
 人台线稿 → 抽骨架 → ControlNet → 出图。本机实测这套参数可用：
 
 ```
-PoseAtlas 姿态图库
+PoseAtlas 姿态图库（render=线稿）
    └─ image → PoseAndFaceDetection → DrawViTPose → ControlNetApplyAdvanced
-                                                    ├─ control_net: xinsir_cn_union_sdxl_1.0_promax
-                                                    ├─ strength: 0.65
-                                                    └─ end_percent: 0.85
-                                                       └─ KSampler → VAEDecode → 保存图像
+                                                     ├─ control_net: xinsir_cn_union_sdxl_1.0_promax
+                                                     ├─ strength: 0.65
+                                                     └─ end_percent: 0.85
+                                                        └─ KSampler → VAEDecode → 保存图像
 ```
 
 **关键参数**：
@@ -133,6 +156,14 @@ PoseAtlas 姿态图库
 
 抽骨架节点来自 [ComfyUI-WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess)（自带 ViTPose ONNX，不用额外装 controlnet_aux）。
 没有这个节点的话，直接把 `image` 当参考图喂给图生图 / 编辑模型也可以。
+
+### 用深度图做 ControlNet depth
+
+把 `render` 切到「深度」，`image` 直接进深度 ControlNet 的 image 输入（不需要再过深度预处理器，
+图本身就是深度图）。白色是近处、深灰是远处，和常见深度 ControlNet 的约定一致。
+
+双人姿势建议用深度版：线稿抽骨架会被 ViTPose 只检出一个人，而深度图保留两个人的前后关系，
+直接喂 depth ControlNet 或用它做景深合成都不会丢人。
 
 ### 配合 Qwen-Image 2.1 编辑
 
@@ -185,7 +216,9 @@ PoseAtlas 姿态图库 → image → TextEncodeQwenImage21 的 images.image_1
 
 | 限制 | 原因 | 建议 |
 |---|---|---|
-| **双人系列（55 组）抽骨架只检出一个人** | ViTPose 单人检测 | 双人姿势直接用 `image` 当参考图喂编辑模型，不要走 ControlNet |
+| **双人系列（55 组）抽骨架只检出一个人** | ViTPose 单人检测 | 用深度图走 depth ControlNet，或直接把 `image` 当参考图喂编辑模型 |
+| 深度原图要逐张点下载 | 源站禁止批量抓取 | 只下真正要用的；不下也能用缩略图跑通 |
+| 深度缩略图是 300×400 | 仓库只带缩略图 | 做正式出图前先点「↓ 原图」拿 900×1200 |
 | 人台图没有 alpha 通道 | 原图是 RGB PNG | `mask` 输出全 1，只有 `invert_mask` 可用 |
 | 图库面板需要浏览器端加载 | 前端从 `/extensions/` 读数据 | 首次打开有约 1 秒加载，之后有缓存 |
 
@@ -201,22 +234,25 @@ PoseAtlas 姿态图库 → image → TextEncodeQwenImage21 的 images.image_1
 | 对象 | 许可 |
 |---|---|
 | 本项目代码（`__init__.py`、`web/poseatlas.js`、`scripts/*`） | **MIT** |
-| 姿态图片、原始数据、名称 | **版权归原作者 ギア (@giaaibusi)**，不在 MIT 范围内 |
+| 姿态线稿、深度图、原始数据、名称 | **版权归原作者 ギア (@giaaibusi)**，不在 MIT 范围内 |
+| 深度缩略图（随仓库的 1439 张） | 同上，仅作浏览索引，不建议再分发 |
 
 原作者允许将作品用于创作（含商用、编辑、参考），但**禁止再分发、转载、转售图片数据本身**。
-所以本仓库只提供下载脚本，不打包图片。如果你 fork 本项目，请保持同样的做法。
+所以本仓库只带缩略图和下载脚本，不打包全尺寸原图。如果你 fork 本项目，请保持同样的做法。
 
-- 原作 / 原始站点：[POSE-DB-01](https://ai-pose-gallery.pages.dev/)
+- 原作 / 线稿站点：[POSE-DB-01](https://ai-pose-gallery.pages.dev/)
+- 深度站点：POSE-DB-02 <https://ai-pose-depth-gallery.pages.dev/>
 - 原作者：[ギア (@giaaibusi)](https://x.com/giaaibusi)
 - 数据整理与前端：[RuiC-PoseAtlas](https://github.com/HRuiCcc/RuiC-PoseAtlas) by [HRuiCcc](https://github.com/HRuiCcc)
 
 本项目为非官方整理，与原作者及 RuiC-PoseAtlas 作者均无隶属关系。
+若原作者认为本仓库侵犯其权益，请通过 [Issue](https://github.com/mugicha-AI/ComfyUI-PoseAtlas/issues) 联系，将立即删除相关内容。
 
 ---
 
 ## 致谢
 
-- 姿态图片与原始数据：ギア (@giaaibusi)
+- 姿态线稿、深度图与原始数据：ギア (@giaaibusi)
 - 数据整理、三语名称、图库前端：HRuiCcc / RuiC-PoseAtlas
 - 抽骨架节点：kijai / ComfyUI-WanAnimatePreprocess
 

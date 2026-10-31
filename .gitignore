@@ -4,6 +4,10 @@ web/atlas/thumbs/*
 !web/atlas/img/.gitkeep
 !web/atlas/thumbs/.gitkeep
 
+# 深度原图同样不随仓库分发，只带 300x400 缩略图
+web/atlas/depth/img/*
+!web/atlas/depth/img/.gitkeep
+
 # 下载临时文件
 *.part
 
