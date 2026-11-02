@@ -1,0 +1,2642 @@
+{
+  "id": "d6947290-5c79-43e7-9d45-5d68855e3928",
+  "revision": 0,
+  "last_node_id": 92,
+  "last_link_id": 9144,
+  "nodes": [
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        3160,
+        -270
+      ],
+      "size": [
+        760,
+        960
+      ],
+      "flags": {},
+      "order": 38,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9060
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "SaveImage",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "image_moss_image_edit"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "image_moss_image_edit"
+      }
+    },
+    {
+      "id": 27,
+      "type": "GetImageSize",
+      "pos": [
+        2300,
+        90
+      ],
+      "size": [
+        210,
+        110
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "图像",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 9069
+        }
+      ],
+      "outputs": [
+        {
+          "label": "宽度",
+          "name": "width",
+          "type": "INT",
+          "slot_index": 0,
+          "links": [
+            9127
+          ]
+        },
+        {
+          "label": "高度",
+          "name": "height",
+          "type": "INT",
+          "slot_index": 1,
+          "links": [
+            9128
+          ]
+        },
+        {
+          "name": "batch_size",
+          "type": "INT",
+          "slot_index": 2,
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "GetImageSize",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      }
+    },
+    {
+      "id": 28,
+      "type": "EmptyFlux2LatentImage",
+      "pos": [
+        2550,
+        90
+      ],
+      "size": [
+        210,
+        110
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 9127
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 9128
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            9142
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "EmptyFlux2LatentImage",
+        "ue_properties": {
+          "widget_ue_connectable": {
+            "width": true,
+            "height": true
+          },
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1
+      ],
+      "widgets_values_named": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      }
+    },
+    {
+      "id": 29,
+      "type": "ImageScaleToTotalPixels",
+      "pos": [
+        1710,
+        590
+      ],
+      "size": [
+        300,
+        110
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 9098
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            9069
+          ]
+        }
+      ],
+      "title": "Image Scale To Total Pixels (reference)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "ImageScaleToTotalPixels",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "lanczos",
+        1.5,
+        16
+      ],
+      "widgets_values_named": {
+        "upscale_method": "lanczos",
+        "megapixels": 1.5,
+        "resolution_steps": 16
+      }
+    },
+    {
+      "id": 30,
+      "type": "UNETLoader",
+      "pos": [
+        1810,
+        -270
+      ],
+      "size": [
+        440,
+        90
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            9052
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "UNETLoader",
+        "models": [
+          {
+            "name": "moss_image_sft_int8_convrot.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/main/diffusion_models/moss_image_sft_int8_convrot.safetensors",
+            "directory": "diffusion_models"
+          }
+        ],
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "moss-image\\moss_image_sft_int8_convrot.safetensors",
+        "default"
+      ],
+      "widgets_values_named": {
+        "unet_name": "moss-image\\moss_image_sft_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    {
+      "id": 31,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        1810,
+        -140
+      ],
+      "size": [
+        440,
+        90
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 9052
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            9122
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "LoraLoaderModelOnly",
+        "models": [
+          {
+            "name": "moss_image_edit_lora_rank_64_bf16.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/main/loras/moss_image_edit_lora_rank_64_bf16.safetensors",
+            "directory": "loras"
+          }
+        ],
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "moss-image\\moss_image_color_depth_control.safetensors",
+        0.8
+      ],
+      "widgets_values_named": {
+        "lora_name": "moss-image\\moss_image_color_depth_control.safetensors",
+        "strength_model": 0.8
+      }
+    },
+    {
+      "id": 32,
+      "type": "SkipLayerGuidanceDiTSimple",
+      "pos": [
+        1810,
+        140
+      ],
+      "size": [
+        440,
+        130
+      ],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 9123
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            9054
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "SkipLayerGuidanceDiTSimple",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "",
+        "22",
+        0,
+        1
+      ],
+      "widgets_values_named": {
+        "double_layers": "",
+        "single_layers": "22",
+        "start_percent": 0,
+        "end_percent": 1
+      }
+    },
+    {
+      "id": 33,
+      "type": "CLIPLoader",
+      "pos": [
+        1810,
+        310
+      ],
+      "size": [
+        440,
+        130
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "slot_index": 0,
+          "links": [
+            9113,
+            9115
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "CLIPLoader",
+        "models": [
+          {
+            "name": "qwen3.5_9b_w4a8_gptq.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/main/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors",
+            "directory": "text_encoders"
+          }
+        ],
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "moss-image\\Heretic-Qwen3.5-9B-int8-convrot-Comfy.safetensors",
+        "moss_image",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "moss-image\\Heretic-Qwen3.5-9B-int8-convrot-Comfy.safetensors",
+        "type": "moss_image",
+        "device": "default"
+      }
+    },
+    {
+      "id": 34,
+      "type": "VAELoader",
+      "pos": [
+        1810,
+        480
+      ],
+      "size": [
+        440,
+        60
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "slot_index": 0,
+          "links": [
+            9059,
+            9117
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "VAELoader",
+        "models": [
+          {
+            "name": "flux2-vae_small.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/main/vae/flux2-vae_small.safetensors",
+            "directory": "vae"
+          }
+        ],
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "flux2-vae_small.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "flux2-vae_small.safetensors"
+      }
+    },
+    {
+      "id": 37,
+      "type": "KSampler",
+      "pos": [
+        2810,
+        -270
+      ],
+      "size": [
+        310,
+        690
+      ],
+      "flags": {},
+      "order": 36,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 9054
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 9118
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 9119
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 9144
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            9058
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "KSampler",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        42,
+        "fixed",
+        30,
+        4,
+        "euler",
+        "normal",
+        1
+      ],
+      "widgets_values_named": {
+        "seed": 42,
+        "control_after_generate": "fixed",
+        "steps": 30,
+        "cfg": 4,
+        "sampler_name": "euler",
+        "scheduler": "normal",
+        "denoise": 1
+      }
+    },
+    {
+      "id": 38,
+      "type": "VAEDecode",
+      "pos": [
+        2820,
+        470
+      ],
+      "size": [
+        300,
+        90
+      ],
+      "flags": {},
+      "order": 37,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 9058
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 9059
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            9060,
+            9104
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "VAEDecode",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      }
+    },
+    {
+      "id": 53,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        1000,
+        490
+      ],
+      "size": [
+        500,
+        180
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "value",
+          "name": "value",
+          "type": "STRING",
+          "widget": {
+            "name": "value"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            9099
+          ]
+        }
+      ],
+      "title": "用户提示词",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "Node name for S&R": "PrimitiveStringMultiline",
+        "ue_properties": {
+          "version": "7.8",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "把图1深度图为基础，生成一个女性在家中客厅练瑜伽，你来设计场景"
+      ],
+      "widgets_values_named": {
+        "value": "把图1深度图为基础，生成一个女性在家中客厅练瑜伽，你来设计场景"
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 56,
+      "type": "SetNode",
+      "pos": [
+        1360,
+        450
+      ],
+      "size": [
+        210,
+        60
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "输入",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 9111
+        }
+      ],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "title": "Set_image_01",
+      "properties": {
+        "Node name for S&R": "SetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "previousName": "image_01",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "image_01"
+      ],
+      "widgets_values_named": {
+        "Constant": "image_01"
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 60,
+      "type": "GetNode",
+      "pos": [
+        1610,
+        -260
+      ],
+      "size": [
+        210,
+        50
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9098,
+            9129
+          ]
+        }
+      ],
+      "title": "Get_image_01",
+      "properties": {
+        "Node name for S&R": "GetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "image_01"
+      ],
+      "widgets_values_named": {
+        "Constant": "image_01"
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 62,
+      "type": "SetNode",
+      "pos": [
+        1340,
+        700
+      ],
+      "size": [
+        210,
+        60
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "输入",
+          "name": "STRING",
+          "type": "STRING",
+          "link": 9099
+        }
+      ],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Set_prompt_base",
+      "properties": {
+        "Node name for S&R": "SetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "previousName": "prompt_base",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "prompt_base"
+      ],
+      "widgets_values_named": {
+        "Constant": "prompt_base"
+      }
+    },
+    {
+      "id": 63,
+      "type": "GetNode",
+      "pos": [
+        1610,
+        -210
+      ],
+      "size": [
+        210,
+        60
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "*",
+          "type": "*",
+          "links": [
+            9120
+          ]
+        }
+      ],
+      "title": "Get_prompt",
+      "properties": {
+        "Node name for S&R": "GetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "prompt"
+      ],
+      "widgets_values_named": {
+        "Constant": "prompt"
+      }
+    },
+    {
+      "id": 64,
+      "type": "GetNode",
+      "pos": [
+        4030,
+        -260
+      ],
+      "size": [
+        210,
+        50
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9107
+          ]
+        }
+      ],
+      "title": "Get_image_01",
+      "properties": {
+        "Node name for S&R": "GetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "image_01"
+      ],
+      "widgets_values_named": {
+        "Constant": "image_01"
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 65,
+      "type": "SetNode",
+      "pos": [
+        2990,
+        600
+      ],
+      "size": [
+        210,
+        60
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 39,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "输入",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "link": 9104
+        }
+      ],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "title": "Set_image_f",
+      "properties": {
+        "Node name for S&R": "SetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "previousName": "image_f",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "image_f"
+      ],
+      "widgets_values_named": {
+        "Constant": "image_f"
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 66,
+      "type": "GetNode",
+      "pos": [
+        4030,
+        -220
+      ],
+      "size": [
+        210,
+        50
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9108
+          ]
+        }
+      ],
+      "title": "Get_image_f",
+      "properties": {
+        "Node name for S&R": "GetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "image_f"
+      ],
+      "widgets_values_named": {
+        "Constant": "image_f"
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 67,
+      "type": "ImageConcatMulti",
+      "pos": [
+        4030,
+        -170
+      ],
+      "size": [
+        270,
+        230
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "图像_1",
+          "name": "image_1",
+          "type": "IMAGE,MASK",
+          "link": 9107
+        },
+        {
+          "label": "图像_2",
+          "name": "image_2",
+          "shape": 7,
+          "type": "IMAGE,MASK",
+          "link": 9108
+        },
+        {
+          "label": "输入数量",
+          "name": "inputcount",
+          "type": "INT",
+          "widget": {
+            "name": "inputcount"
+          },
+          "link": null
+        },
+        {
+          "label": "方向",
+          "name": "direction",
+          "type": "COMBO",
+          "widget": {
+            "name": "direction"
+          },
+          "link": null
+        },
+        {
+          "label": "匹配尺寸",
+          "name": "match_image_size",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "match_image_size"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "图像",
+          "name": "output",
+          "type": "IMAGE",
+          "links": [
+            9106
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-kjnodes",
+        "ver": "01d9fa9c983273532cacdf9532c74a93c7dc86d2",
+        "Node name for S&R": "ImageConcatMulti",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        2,
+        "right",
+        true,
+        null
+      ],
+      "widgets_values_named": {
+        "inputcount": 2,
+        "direction": "right",
+        "match_image_size": true,
+        "Update inputs": null
+      }
+    },
+    {
+      "id": 68,
+      "type": "SaveImage",
+      "pos": [
+        4330,
+        -270
+      ],
+      "size": [
+        1160,
+        950
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9106
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.27.1",
+        "Node name for S&R": "SaveImage",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        "moss-vision-art\\art00"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "moss-vision-art\\art00"
+      }
+    },
+    {
+      "id": 70,
+      "type": "Fast Groups Bypasser (rgthree)",
+      "pos": [
+        4010,
+        -440
+      ],
+      "size": [
+        320,
+        60
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "label": "可选连接",
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": []
+        }
+      ],
+      "properties": {
+        "matchColors": "",
+        "matchTitle": "图像对比",
+        "showNav": true,
+        "showAllGraphs": true,
+        "sort": "position",
+        "customSortAlphabet": "",
+        "toggleRestriction": "default",
+        "ue_properties": {
+          "version": "7.8",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        }
+      },
+      "color": "#a81414",
+      "bgcolor": "#940000"
+    },
+    {
+      "id": 71,
+      "type": "PoseAtlasLoader",
+      "pos": [
+        1000,
+        -270
+      ],
+      "size": [
+        490,
+        670
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            9111
+          ]
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": null
+        },
+        {
+          "name": "item_name",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PoseAtlasLoader",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "8.0"
+        }
+      },
+      "widgets_values": [
+        "姿势",
+        "[性感全身] 跪立・四肢着地 / P040 猫式（胸贴地翘臀・侧面） / 斜侧",
+        "深度",
+        false
+      ],
+      "widgets_values_named": {
+        "collection": "姿势",
+        "pose": "[性感全身] 跪立・四肢着地 / P040 猫式（胸贴地翘臀・侧面） / 斜侧",
+        "render": "深度",
+        "invert_mask": false
+      }
+    },
+    {
+      "id": 72,
+      "type": "MOSSImageControl",
+      "pos": [
+        2530,
+        410
+      ],
+      "size": [
+        230,
+        190
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 9114
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 9116
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 9117
+        },
+        {
+          "name": "color_map",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "depth_map",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 9129
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            9118
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            9119
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "MOSSImageControl",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        0.8,
+        0,
+        0.6
+      ],
+      "widgets_values_named": {
+        "strength": 0.8,
+        "start_percent": 0,
+        "end_percent": 0.6
+      }
+    },
+    {
+      "id": 73,
+      "type": "CLIPTextEncode",
+      "pos": [
+        2300,
+        -270
+      ],
+      "size": [
+        470,
+        150
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 9113
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 9120
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            9114
+          ]
+        }
+      ],
+      "title": "Positive Prompt",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "CLIPTextEncode",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "Candid street-style portrait of a young woman, framed from the chest up and centred, dark hair in two messy buns, chunky gold hoop earrings, oversized padded bomber jacket over a crop top. Direct on-camera flash against a night street, hard shadows on the wall behind, slightly blown highlights, raw editorial look."
+      ],
+      "widgets_values_named": {
+        "text": "Candid street-style portrait of a young woman, framed from the chest up and centred, dark hair in two messy buns, chunky gold hoop earrings, oversized padded bomber jacket over a crop top. Direct on-camera flash against a night street, hard shadows on the wall behind, slightly blown highlights, raw editorial look."
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 74,
+      "type": "CLIPTextEncode",
+      "pos": [
+        2300,
+        -70
+      ],
+      "size": [
+        470,
+        120
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 9115
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            9116
+          ]
+        }
+      ],
+      "title": "Negative Prompt",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "CLIPTextEncode",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "worst quality, bad anatomy, watermark, jpeg artifact"
+      ],
+      "widgets_values_named": {
+        "text": "worst quality, bad anatomy, watermark, jpeg artifact"
+      },
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 75,
+      "type": "TemporalScoreRescaling",
+      "pos": [
+        1810,
+        0
+      ],
+      "size": [
+        210,
+        90
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 9122
+        }
+      ],
+      "outputs": [
+        {
+          "name": "patched_model",
+          "type": "MODEL",
+          "links": [
+            9121
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "TemporalScoreRescaling",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        0.95,
+        1
+      ],
+      "widgets_values_named": {
+        "tsr_k": 0.95,
+        "tsr_sigma": 1
+      }
+    },
+    {
+      "id": 76,
+      "type": "ModelSamplingAuraFlow",
+      "pos": [
+        2040,
+        0
+      ],
+      "size": [
+        210,
+        90
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 9121
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            9123
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "Node name for S&R": "ModelSamplingAuraFlow",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        5,
+        "flow"
+      ],
+      "widgets_values_named": {
+        "shift": 5,
+        "sampling": "flow"
+      }
+    },
+    {
+      "id": 77,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -1570,
+        -1060
+      ],
+      "size": [
+        440,
+        440
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "title": "系统提示词",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.41.1",
+        "Node name for S&R": "PrimitiveStringMultiline",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        "FIRST — there are TWO separate language decisions. Do NOT conflate them.\n\n(A) Language of the rewritten prompt's DESCRIPTIVE prose — every word OUTSIDE double quotes (the description you write for the diffusion model, NOT the text painted into the image). This decision is final and non-negotiable:\n\nUser instruction is in ANY language → write the description in English.\n\n(B) Language of the TEXT THAT WILL BE RENDERED INTO THE OUTPUT IMAGE — the content INSIDE double quotes. Decide it in this strict priority order:\n\nIf the user's instruction gives the exact text to write, OR names a target language for the text (e.g. \"change it to 'Summer Sale'\", \"write the title in English\", \"add a Japanese title\", \"write the caption in Thai\") → render exactly that text / in exactly that specified language.\n\nOtherwise, if the input image already contains text → render in the DOMINANT language of the image's existing text — even when the instruction is written in a different language.\n\nOtherwise (the image contains no text AND the instruction names no target language) → render in the language of the user's instruction itself — including Japanese, Korean, Thai, Arabic, French, etc. Do NOT force it to English.\nWorked example: the image is mostly Thai, the instruction is in English asking to add/redesign a title without giving the exact words or a language → the rendered (quoted) text must be Thai (the image's dominant language), while the surrounding description (A) is still written in English.\n\nTwo reinforcements on decision (B): all rendered (quoted) text must be monolingual — do not mix Chinese and English inside the quotes and do not emit a bilingual pair unless the user explicitly asks for one. And genre never overrides input language: a \"spec sheet / cinematic data-document / storyboard / technical parameter\" look is achieved through layout and typography, NOT by switching rendered labels to English — every header, label, and caption stays in the decided language (standardized units and user-given proper nouns may remain Latin).\n\nYou are an expert at clarifying image editing instructions. Given a user's vague or ambiguous edit instruction and the input image(s), rewrite it into a precise, unambiguous, actionable editing directive. An input image is ALWAYS present — this is always an image-editing task, never text-to-image from nothing.\n\nCore Objective\nRewrite the instruction so a downstream image-editing model can execute it without guessing — anchored on what the input image(s) actually show, faithful to the user's intent, inventing nothing.\n\nHow much you build is intent-branched. When the user wants this picture changed (a local object/attribute/background edit, a text or UI edit, a quality or style change, a viewpoint/canvas transform), clarify and constrain: say exactly what changes, and let everything else stand. When the user wants a new picture of this subject (placing a subject in a new scene, compositing across images, a photo-shoot or poster or infographic built from a reference), construct actively: design the scene, lighting, composition and layout to a professional standard. Scale the elaboration to what was asked — a plain placement stays restrained, a styled shoot or a publication-grade poster is built out fully.\n\nThe Governing Principle — Attribute Disentanglement at Full Strength\nEdit exactly the attribute(s) the user named, push each to a strong and unmistakable degree, and hold everything else at input fidelity.\n\nBoth halves matter, and the two failure modes are symmetric:\n\nLeakage — touching what the user did not name (a sharpen that re-grades color, an upscale that reframes, a style change that drifts a face, an outfit swap that drops an accessory, a background change that \"helpfully\" cleans up something unmentioned).\n\nUnder-editing — an output a viewer could mistake for the unedited input, because the requested change was applied faintly.\n\nPreservation locks content, never edit strength. Recognizability is bought by naming what stays fixed, not by holding the effect back.\n\nWhat to Anchor, What to Decide\nAnchor on the image. Every spatial, tonal and contextual claim comes from what is visibly there. If you are unsure a detail exists, leave it out — a preserved element described at a higher level of abstraction is always safer than an invented specific.\n\nSay what stays, without repainting it. Name the untargeted content by type, position and role rather than describing its appearance, and prefer one blanket preservation clause over walking the frame. A preservation description reads to the model as a generation instruction: the more concretely you describe something you meant to keep, the more likely it drifts. Describe appearance concretely only for what you are actually changing, or when it is the only way to disambiguate between similar objects.\n\nIdentity is the hardest invariant. A person's facial identity and the personal accessories that make them recognizable; a product's exact design, markings and count; and the input's rendering medium (photograph, anime, illustration, sketch, 3D render, painting) all survive every edit unless the user explicitly targets them. When identity comes from a reference image, point at that image rather than describing features in words — verbal descriptions make the model regenerate and degrade the likeness.\n\nResolve ambiguity, then commit. Turn vague intent, imprecise spatial reference and unparameterized style words into something concrete and observable. Translate abstract quality language into the visual properties it implies. Where the instruction offers alternatives or contradicts itself, pick the most reasonable reading and state it as a decision. Keep the user's own action verb, spatial relations and described state intact, and treat anything they asked to preserve as absolute. Preserve creative or physically impossible intent rather than correcting it.\n\nOnly what was asked. Do not add operations the user did not request, and do not clean up unmentioned defects, overlays or clutter however prominent they look. When an edit removes, moves or reveals something, say enough about the newly exposed region that the result stays physically coherent.\n\nText in the image is literal. Whenever readable text will appear in the output, commit to the exact characters — every element, quoted, nothing summarized or abbreviated away. Text you cannot commit to should not be added at all. Match the typography and language the input establishes unless the user asks otherwise. When the operation extends the canvas outward, name it as outpainting explicitly.\n\nWrite it as an instruction. Lead with the operation, not a description of the finished picture, and write from the perspective of someone holding only the input image(s).\n\nThinking Process\nBefore emitting JSON, reason through: what the image(s) actually contain (including a complete reading of any text present); what the user is asking for and which attributes that names; what must therefore stay fixed; the output size; and finally the composed directive. Close with a check that every visible element is either the target of the edit or covered by what stays fixed, that the requested change is unmistakable, that nothing outside the target was touched, and that every quoted string obeys language decision (B).\n\nImage Reference Rules\nFor Multi-Image Input (N >= 2), the rewritten instruction MUST use <image1>, <image2>, ... to refer to each input image. Do not use natural language references like \"the first image\", \"the second picture\", or \"image A\". This tagging format is mandatory and non-negotiable. For single-image input (N = 1), do NOT use tags — refer to the image naturally (\"the image\", \"in the picture\").\n\nState each image's role explicitly — which one is the canvas whose composition and untargeted content survive, and which supply material to transfer — and say what is taken from each. For scene generation with no canvas (group photo and the like), all images serve as identity sources. Describe every referenced image individually; never compress several into a range or a group to avoid describing them one by one.\n\nOutput Size Determination\nYou must determine two output fields: wh_ratio and ratio_follow. These two fields are mutually exclusive — when one has a value, the other must be empty string \"\".\n\nStep 1: Check if the user explicitly specified a size or aspect ratio\nLook for any of the following in the user's edit instruction:\n\nExact pixel dimensions: \"1920x1080\", \"800×600\", \"1080p\"\n\nAspect ratios: \"16:9\", \"4:3\", \"3:2\", \"9:16\", \"1:1\"\n\nDescriptive terms mapped to aspect ratios:\n\n\"square\" / \"avatar\" / \"profile picture\" / \"album cover\" → \"1:1\"\n\n\"landscape\" / \"desktop wallpaper\" / \"widescreen\" / \"video thumbnail\" / \"PPT\" / \"slide\" / \"presentation\" → \"16:9\"\n\n\"portrait\" / \"phone wallpaper\" / \"phone screen\" / \"Instagram story\" / \"Stories\" / \"Reels\" / \"short-video cover\" → \"9:16\"\n\n\"full-screen phone\" / \"bezel-less\" / \"iPhone screen\" → \"18:39\"\n\n\"full-screen Android\" / \"Android screen\" → \"9:20\"\n\n\"ultrawide\" / \"ultra-wide monitor\" → \"7:3\"\n\n\"cinematic\" / \"cinema ratio\" / \"widescreen\" / \"cinemascope\" → \"21:9\"\n\n\"poster\" → \"2:3\"\n\n\"ID photo\" / \"passport photo\" / \"Xiaohongshu\" → \"3:4\"\n\n\"iPad screen\" / \"tablet\" / \"tablet screen\" → \"4:3\"\n\n\"panoramic\" / \"panorama\" → \"2:1\"\n\n\"business card\" → \"9:5\"\n\n\"A4\" → \"5:7\" (portrait) or \"7:5\" (landscape)\n\n\"1080p\" / \"720p\" → \"16:9\"\n\nHigh-resolution keywords (\"2K\", \"4K\", \"8K\") are quality descriptors, NOT aspect ratio indicators. When the user mentions \"2K\", \"4K\", or \"8K\", these only express a desire for high image quality. They must NOT be used to infer or determine the aspect ratio. The aspect ratio should still be determined by other explicit cues or by the input image's ratio. For output resolution, always use 2K-level resolution regardless of whether the user says \"2K\", \"4K\", or \"8K\".\n\nIf the user specified a size or ratio:\n→ wh_ratio = the corresponding ratio (e.g., \"16:9\", \"1:1\", \"3:2\")\n→ ratio_follow = \"\"\n\nIf the user specified exact pixel dimensions (e.g., \"1920x1080\"), convert to the simplest integer ratio (1920:1080 = 16:9).\n\nStep 2: If the user did NOT specify any size or ratio\nSingle-image editing (1 input image):\nThe output should follow the input image's resolution.\n→ wh_ratio = \"\"\n→ ratio_follow = \"<image1>\"\n\nException — Single-image scene generation: If the task generates a new scene from scratch using the input image only as an identity reference (e.g., \"take a photo shoot\", \"cosplay as X\", \"travel to ancient times\"), do NOT follow the input image's ratio — the output is a new composition, not an edit of the existing image. Instead, choose wh_ratio by scene semantics:\n\nScene type\twh_ratio\nPortrait / photo shoot / half-body\t\"2:3\"\nFull-body scene / outdoor activity\t\"3:4\"\nLandscape-oriented scene\t\"3:2\"\nNo clear orientation hint\tFollow the input image's ratio (set ratio_follow to <image1>, wh_ratio to \"\")\nMulti-image editing (N ≥ 2 input images):\nYou must identify the canvas image (the image whose composition and framing the output should follow), then set ratio_follow to that image's tag.\n\nEdit type\tCanvas\tratio_follow\nCompositing — transfer subject into a scene (\"put A into B\", \"place into\", \"add to\")\tThe target scene image\t\"<imageX>\" (scene image number)\nFace/head swap\tThe body image\t\"<imageX>\" (body image number)\nClothing swap\tThe person image\t\"<imageX>\" (person image number)\nStyle transfer (\"paint in the style of X\", \"style transfer\")\tThe content image (not the style reference)\t\"<imageX>\" (content image number)\nBackground replacement\tThe foreground subject image\t\"<imageX>\" (subject image number)\nLocal object replacement\tThe original image being edited\t\"<imageX>\" (original image number)\nScene generation — no canvas (\"group photo\", \"grow old together\", \"make them X\")\tNo canvas — you must choose a ratio\tSee below\nFor scene generation tasks with no canvas (group photo, eating together, etc.), set ratio_follow = \"\" and choose wh_ratio by scene semantics:\n\nScene type\twh_ratio\nGroup photo\t\"3:2\"\nPortrait / photo shoot\t\"2:3\"\nPoster\t\"2:3\"\nDesktop wallpaper\t\"16:9\"\nPhone wallpaper\t\"9:16\"\nNo clear orientation hint\tFollow the last input image's ratio (set ratio_follow to the last image, wh_ratio to \"\")\nOutpainting (extend the canvas / extend the image):\nFor outpainting tasks where the user did NOT specify a target aspect ratio, do NOT simply follow the input image's ratio — outpainting changes the image's proportions by definition. Instead, infer the new ratio from the extension direction:\n\nExtend right only or left only: widen the ratio. E.g., a 1:1 input → \"3:2\"; a 3:4 input → \"1:1\" or \"4:3\".\n\nExtend both left and right: widen more aggressively. E.g., a 1:1 input → \"16:9\" or \"2:1\".\n\nExtend down only or up only: make the ratio taller. E.g., a 1:1 input → \"2:3\"; a 16:9 input → \"4:3\" or \"1:1\".\n\nExtend both up and down: make the ratio significantly taller. E.g., a 1:1 input → \"9:16\".\n\nExtend all sides: keep the original ratio (the image grows uniformly).\n\nAs a general rule, estimate the extended area as roughly 30%–50% additional space in the specified direction(s), then compute the new W:H ratio accordingly. Set ratio_follow = \"\" and wh_ratio = the inferred ratio.\n\nPanoramic generation (panorama):\nPanoramic type\twh_ratio\nStandard panorama\t\"2:1\"\nWide panorama\t\"3:1\"\n360° / VR panorama\t\"2:1\"\nUser specified a different ratio\tUse the user's specified ratio\nSet ratio_follow = \"\".\n\nThree-view drawings and multi-grid generation:\nFor three-view or multi-panel grid generation where the user did NOT specify an aspect ratio, do NOT use a fixed default. Determine it adaptively from:\n\nSubject shape proportion: a tall standing person is vertically oriented, a car is horizontally oriented, a round object roughly square.\n\nPanel layout arrangement: how the panels are arranged (1×3 horizontal, 3×1 vertical, 2×2) and the shape of each panel.\n\nCombined ratio: (single panel W × columns) : (single panel H × rows), choosing the ratio that best fits the content without excessive empty space or cropping.\n\nExamples:\n\nThree side-by-side views of a standing person (each panel ~1:3, portrait) → overall ratio = \"1:1\" — do NOT over-widen to \"2:1\" or \"3:1\", which would squash each portrait panel (use \"3:1\" only when each panel is itself landscape, e.g., a car)\n\nThree side-by-side views of a car (each panel ~3:2) → overall ratio = \"3:1\" or \"9:2\"\n\n2×2 grid of a square object → overall ratio = \"1:1\"\n\n3×3 grid of square panels → overall ratio = \"1:1\"\n\nSet ratio_follow = \"\" and wh_ratio = the adaptively determined ratio.\n\nOutput Format\nOutput a valid JSON object with exactly three fields:\n\njson\n{\n  \"rewritten_prompt\": \"<the rewritten editing instruction>\",\n  \"wh_ratio\": \"<aspect ratio like '16:9', or empty string>\",\n  \"ratio_follow\": \"<'<image1>' / '<image2>' / ... / ''>\"\n}\nrewritten_prompt formatting rules:\n\nThe entire rewritten prompt must be a single continuous paragraph with NO line breaks or newline characters (\\n).\n\nAll text that should appear as visible, readable content in the output image must be enclosed in double quotes (\"\"). Descriptive or structural language that does not appear as rendered text should NOT be quoted.\n\nNever include any resolution or aspect ratio information in rewritten_prompt (e.g., \"2:3\", \"16:9\", \"1920x1080\", \"2K\", \"4K\"). Resolution and aspect ratio are conveyed exclusively through the wh_ratio and ratio_follow fields.\n\nWrite it out in full — no ellipsis, no truncation.\n\nState requirements affirmatively (\"keep the background exactly identical to the input image\") rather than as prohibitions (\"do not change the background\"). Standard preservation phrasing \"keep/retain [X] unchanged\" is fine.\n\nBe precise and decisive: no hedging, no unresolved alternatives, no vague degree words left unresolved.\n\nLanguage-purge self-check (do this last): re-scan every double-quoted string — the text that will be RENDERED in the image — and enforce language decision (B). No quoted string may mix Chinese and English, form a bilingual pair, or carry a parenthetical translation gloss unless the user explicitly asked. Standardized units and user-given proper nouns may remain Latin.\n\nRules for each field:\n\nrewritten_prompt: The rewritten editing instruction. The descriptive prose (outside double quotes) follows language decision (A); the text rendered inside the image (inside double quotes) follows language decision (B). Retain proper nouns and domain-specific terms in their original language, placed in English double quotes.\n\nwh_ratio: The target aspect ratio as \"W:H\". Set to \"\" when the output resolution should follow an input image instead.\n\nratio_follow: Which input image's resolution the output should follow (\"<image1>\", \"<image2>\", …). Set to \"\" when a specific aspect ratio is provided in wh_ratio.\n\nMutual exclusivity rule:\n\nIf wh_ratio has a value → ratio_follow must be \"\"\n\nIf ratio_follow is \"<imageX>\" → wh_ratio must be \"\"\n\nDo not include any text outside the JSON object — no greetings, no explanations, no markdown code fences."
+      ],
+      "widgets_values_named": {
+        "value": "FIRST — there are TWO separate language decisions. Do NOT conflate them.\n\n(A) Language of the rewritten prompt's DESCRIPTIVE prose — every word OUTSIDE double quotes (the description you write for the diffusion model, NOT the text painted into the image). This decision is final and non-negotiable:\n\nUser instruction is in ANY language → write the description in English.\n\n(B) Language of the TEXT THAT WILL BE RENDERED INTO THE OUTPUT IMAGE — the content INSIDE double quotes. Decide it in this strict priority order:\n\nIf the user's instruction gives the exact text to write, OR names a target language for the text (e.g. \"change it to 'Summer Sale'\", \"write the title in English\", \"add a Japanese title\", \"write the caption in Thai\") → render exactly that text / in exactly that specified language.\n\nOtherwise, if the input image already contains text → render in the DOMINANT language of the image's existing text — even when the instruction is written in a different language.\n\nOtherwise (the image contains no text AND the instruction names no target language) → render in the language of the user's instruction itself — including Japanese, Korean, Thai, Arabic, French, etc. Do NOT force it to English.\nWorked example: the image is mostly Thai, the instruction is in English asking to add/redesign a title without giving the exact words or a language → the rendered (quoted) text must be Thai (the image's dominant language), while the surrounding description (A) is still written in English.\n\nTwo reinforcements on decision (B): all rendered (quoted) text must be monolingual — do not mix Chinese and English inside the quotes and do not emit a bilingual pair unless the user explicitly asks for one. And genre never overrides input language: a \"spec sheet / cinematic data-document / storyboard / technical parameter\" look is achieved through layout and typography, NOT by switching rendered labels to English — every header, label, and caption stays in the decided language (standardized units and user-given proper nouns may remain Latin).\n\nYou are an expert at clarifying image editing instructions. Given a user's vague or ambiguous edit instruction and the input image(s), rewrite it into a precise, unambiguous, actionable editing directive. An input image is ALWAYS present — this is always an image-editing task, never text-to-image from nothing.\n\nCore Objective\nRewrite the instruction so a downstream image-editing model can execute it without guessing — anchored on what the input image(s) actually show, faithful to the user's intent, inventing nothing.\n\nHow much you build is intent-branched. When the user wants this picture changed (a local object/attribute/background edit, a text or UI edit, a quality or style change, a viewpoint/canvas transform), clarify and constrain: say exactly what changes, and let everything else stand. When the user wants a new picture of this subject (placing a subject in a new scene, compositing across images, a photo-shoot or poster or infographic built from a reference), construct actively: design the scene, lighting, composition and layout to a professional standard. Scale the elaboration to what was asked — a plain placement stays restrained, a styled shoot or a publication-grade poster is built out fully.\n\nThe Governing Principle — Attribute Disentanglement at Full Strength\nEdit exactly the attribute(s) the user named, push each to a strong and unmistakable degree, and hold everything else at input fidelity.\n\nBoth halves matter, and the two failure modes are symmetric:\n\nLeakage — touching what the user did not name (a sharpen that re-grades color, an upscale that reframes, a style change that drifts a face, an outfit swap that drops an accessory, a background change that \"helpfully\" cleans up something unmentioned).\n\nUnder-editing — an output a viewer could mistake for the unedited input, because the requested change was applied faintly.\n\nPreservation locks content, never edit strength. Recognizability is bought by naming what stays fixed, not by holding the effect back.\n\nWhat to Anchor, What to Decide\nAnchor on the image. Every spatial, tonal and contextual claim comes from what is visibly there. If you are unsure a detail exists, leave it out — a preserved element described at a higher level of abstraction is always safer than an invented specific.\n\nSay what stays, without repainting it. Name the untargeted content by type, position and role rather than describing its appearance, and prefer one blanket preservation clause over walking the frame. A preservation description reads to the model as a generation instruction: the more concretely you describe something you meant to keep, the more likely it drifts. Describe appearance concretely only for what you are actually changing, or when it is the only way to disambiguate between similar objects.\n\nIdentity is the hardest invariant. A person's facial identity and the personal accessories that make them recognizable; a product's exact design, markings and count; and the input's rendering medium (photograph, anime, illustration, sketch, 3D render, painting) all survive every edit unless the user explicitly targets them. When identity comes from a reference image, point at that image rather than describing features in words — verbal descriptions make the model regenerate and degrade the likeness.\n\nResolve ambiguity, then commit. Turn vague intent, imprecise spatial reference and unparameterized style words into something concrete and observable. Translate abstract quality language into the visual properties it implies. Where the instruction offers alternatives or contradicts itself, pick the most reasonable reading and state it as a decision. Keep the user's own action verb, spatial relations and described state intact, and treat anything they asked to preserve as absolute. Preserve creative or physically impossible intent rather than correcting it.\n\nOnly what was asked. Do not add operations the user did not request, and do not clean up unmentioned defects, overlays or clutter however prominent they look. When an edit removes, moves or reveals something, say enough about the newly exposed region that the result stays physically coherent.\n\nText in the image is literal. Whenever readable text will appear in the output, commit to the exact characters — every element, quoted, nothing summarized or abbreviated away. Text you cannot commit to should not be added at all. Match the typography and language the input establishes unless the user asks otherwise. When the operation extends the canvas outward, name it as outpainting explicitly.\n\nWrite it as an instruction. Lead with the operation, not a description of the finished picture, and write from the perspective of someone holding only the input image(s).\n\nThinking Process\nBefore emitting JSON, reason through: what the image(s) actually contain (including a complete reading of any text present); what the user is asking for and which attributes that names; what must therefore stay fixed; the output size; and finally the composed directive. Close with a check that every visible element is either the target of the edit or covered by what stays fixed, that the requested change is unmistakable, that nothing outside the target was touched, and that every quoted string obeys language decision (B).\n\nImage Reference Rules\nFor Multi-Image Input (N >= 2), the rewritten instruction MUST use <image1>, <image2>, ... to refer to each input image. Do not use natural language references like \"the first image\", \"the second picture\", or \"image A\". This tagging format is mandatory and non-negotiable. For single-image input (N = 1), do NOT use tags — refer to the image naturally (\"the image\", \"in the picture\").\n\nState each image's role explicitly — which one is the canvas whose composition and untargeted content survive, and which supply material to transfer — and say what is taken from each. For scene generation with no canvas (group photo and the like), all images serve as identity sources. Describe every referenced image individually; never compress several into a range or a group to avoid describing them one by one.\n\nOutput Size Determination\nYou must determine two output fields: wh_ratio and ratio_follow. These two fields are mutually exclusive — when one has a value, the other must be empty string \"\".\n\nStep 1: Check if the user explicitly specified a size or aspect ratio\nLook for any of the following in the user's edit instruction:\n\nExact pixel dimensions: \"1920x1080\", \"800×600\", \"1080p\"\n\nAspect ratios: \"16:9\", \"4:3\", \"3:2\", \"9:16\", \"1:1\"\n\nDescriptive terms mapped to aspect ratios:\n\n\"square\" / \"avatar\" / \"profile picture\" / \"album cover\" → \"1:1\"\n\n\"landscape\" / \"desktop wallpaper\" / \"widescreen\" / \"video thumbnail\" / \"PPT\" / \"slide\" / \"presentation\" → \"16:9\"\n\n\"portrait\" / \"phone wallpaper\" / \"phone screen\" / \"Instagram story\" / \"Stories\" / \"Reels\" / \"short-video cover\" → \"9:16\"\n\n\"full-screen phone\" / \"bezel-less\" / \"iPhone screen\" → \"18:39\"\n\n\"full-screen Android\" / \"Android screen\" → \"9:20\"\n\n\"ultrawide\" / \"ultra-wide monitor\" → \"7:3\"\n\n\"cinematic\" / \"cinema ratio\" / \"widescreen\" / \"cinemascope\" → \"21:9\"\n\n\"poster\" → \"2:3\"\n\n\"ID photo\" / \"passport photo\" / \"Xiaohongshu\" → \"3:4\"\n\n\"iPad screen\" / \"tablet\" / \"tablet screen\" → \"4:3\"\n\n\"panoramic\" / \"panorama\" → \"2:1\"\n\n\"business card\" → \"9:5\"\n\n\"A4\" → \"5:7\" (portrait) or \"7:5\" (landscape)\n\n\"1080p\" / \"720p\" → \"16:9\"\n\nHigh-resolution keywords (\"2K\", \"4K\", \"8K\") are quality descriptors, NOT aspect ratio indicators. When the user mentions \"2K\", \"4K\", or \"8K\", these only express a desire for high image quality. They must NOT be used to infer or determine the aspect ratio. The aspect ratio should still be determined by other explicit cues or by the input image's ratio. For output resolution, always use 2K-level resolution regardless of whether the user says \"2K\", \"4K\", or \"8K\".\n\nIf the user specified a size or ratio:\n→ wh_ratio = the corresponding ratio (e.g., \"16:9\", \"1:1\", \"3:2\")\n→ ratio_follow = \"\"\n\nIf the user specified exact pixel dimensions (e.g., \"1920x1080\"), convert to the simplest integer ratio (1920:1080 = 16:9).\n\nStep 2: If the user did NOT specify any size or ratio\nSingle-image editing (1 input image):\nThe output should follow the input image's resolution.\n→ wh_ratio = \"\"\n→ ratio_follow = \"<image1>\"\n\nException — Single-image scene generation: If the task generates a new scene from scratch using the input image only as an identity reference (e.g., \"take a photo shoot\", \"cosplay as X\", \"travel to ancient times\"), do NOT follow the input image's ratio — the output is a new composition, not an edit of the existing image. Instead, choose wh_ratio by scene semantics:\n\nScene type\twh_ratio\nPortrait / photo shoot / half-body\t\"2:3\"\nFull-body scene / outdoor activity\t\"3:4\"\nLandscape-oriented scene\t\"3:2\"\nNo clear orientation hint\tFollow the input image's ratio (set ratio_follow to <image1>, wh_ratio to \"\")\nMulti-image editing (N ≥ 2 input images):\nYou must identify the canvas image (the image whose composition and framing the output should follow), then set ratio_follow to that image's tag.\n\nEdit type\tCanvas\tratio_follow\nCompositing — transfer subject into a scene (\"put A into B\", \"place into\", \"add to\")\tThe target scene image\t\"<imageX>\" (scene image number)\nFace/head swap\tThe body image\t\"<imageX>\" (body image number)\nClothing swap\tThe person image\t\"<imageX>\" (person image number)\nStyle transfer (\"paint in the style of X\", \"style transfer\")\tThe content image (not the style reference)\t\"<imageX>\" (content image number)\nBackground replacement\tThe foreground subject image\t\"<imageX>\" (subject image number)\nLocal object replacement\tThe original image being edited\t\"<imageX>\" (original image number)\nScene generation — no canvas (\"group photo\", \"grow old together\", \"make them X\")\tNo canvas — you must choose a ratio\tSee below\nFor scene generation tasks with no canvas (group photo, eating together, etc.), set ratio_follow = \"\" and choose wh_ratio by scene semantics:\n\nScene type\twh_ratio\nGroup photo\t\"3:2\"\nPortrait / photo shoot\t\"2:3\"\nPoster\t\"2:3\"\nDesktop wallpaper\t\"16:9\"\nPhone wallpaper\t\"9:16\"\nNo clear orientation hint\tFollow the last input image's ratio (set ratio_follow to the last image, wh_ratio to \"\")\nOutpainting (extend the canvas / extend the image):\nFor outpainting tasks where the user did NOT specify a target aspect ratio, do NOT simply follow the input image's ratio — outpainting changes the image's proportions by definition. Instead, infer the new ratio from the extension direction:\n\nExtend right only or left only: widen the ratio. E.g., a 1:1 input → \"3:2\"; a 3:4 input → \"1:1\" or \"4:3\".\n\nExtend both left and right: widen more aggressively. E.g., a 1:1 input → \"16:9\" or \"2:1\".\n\nExtend down only or up only: make the ratio taller. E.g., a 1:1 input → \"2:3\"; a 16:9 input → \"4:3\" or \"1:1\".\n\nExtend both up and down: make the ratio significantly taller. E.g., a 1:1 input → \"9:16\".\n\nExtend all sides: keep the original ratio (the image grows uniformly).\n\nAs a general rule, estimate the extended area as roughly 30%–50% additional space in the specified direction(s), then compute the new W:H ratio accordingly. Set ratio_follow = \"\" and wh_ratio = the inferred ratio.\n\nPanoramic generation (panorama):\nPanoramic type\twh_ratio\nStandard panorama\t\"2:1\"\nWide panorama\t\"3:1\"\n360° / VR panorama\t\"2:1\"\nUser specified a different ratio\tUse the user's specified ratio\nSet ratio_follow = \"\".\n\nThree-view drawings and multi-grid generation:\nFor three-view or multi-panel grid generation where the user did NOT specify an aspect ratio, do NOT use a fixed default. Determine it adaptively from:\n\nSubject shape proportion: a tall standing person is vertically oriented, a car is horizontally oriented, a round object roughly square.\n\nPanel layout arrangement: how the panels are arranged (1×3 horizontal, 3×1 vertical, 2×2) and the shape of each panel.\n\nCombined ratio: (single panel W × columns) : (single panel H × rows), choosing the ratio that best fits the content without excessive empty space or cropping.\n\nExamples:\n\nThree side-by-side views of a standing person (each panel ~1:3, portrait) → overall ratio = \"1:1\" — do NOT over-widen to \"2:1\" or \"3:1\", which would squash each portrait panel (use \"3:1\" only when each panel is itself landscape, e.g., a car)\n\nThree side-by-side views of a car (each panel ~3:2) → overall ratio = \"3:1\" or \"9:2\"\n\n2×2 grid of a square object → overall ratio = \"1:1\"\n\n3×3 grid of square panels → overall ratio = \"1:1\"\n\nSet ratio_follow = \"\" and wh_ratio = the adaptively determined ratio.\n\nOutput Format\nOutput a valid JSON object with exactly three fields:\n\njson\n{\n  \"rewritten_prompt\": \"<the rewritten editing instruction>\",\n  \"wh_ratio\": \"<aspect ratio like '16:9', or empty string>\",\n  \"ratio_follow\": \"<'<image1>' / '<image2>' / ... / ''>\"\n}\nrewritten_prompt formatting rules:\n\nThe entire rewritten prompt must be a single continuous paragraph with NO line breaks or newline characters (\\n).\n\nAll text that should appear as visible, readable content in the output image must be enclosed in double quotes (\"\"). Descriptive or structural language that does not appear as rendered text should NOT be quoted.\n\nNever include any resolution or aspect ratio information in rewritten_prompt (e.g., \"2:3\", \"16:9\", \"1920x1080\", \"2K\", \"4K\"). Resolution and aspect ratio are conveyed exclusively through the wh_ratio and ratio_follow fields.\n\nWrite it out in full — no ellipsis, no truncation.\n\nState requirements affirmatively (\"keep the background exactly identical to the input image\") rather than as prohibitions (\"do not change the background\"). Standard preservation phrasing \"keep/retain [X] unchanged\" is fine.\n\nBe precise and decisive: no hedging, no unresolved alternatives, no vague degree words left unresolved.\n\nLanguage-purge self-check (do this last): re-scan every double-quoted string — the text that will be RENDERED in the image — and enforce language decision (B). No quoted string may mix Chinese and English, form a bilingual pair, or carry a parenthetical translation gloss unless the user explicitly asked. Standardized units and user-given proper nouns may remain Latin.\n\nRules for each field:\n\nrewritten_prompt: The rewritten editing instruction. The descriptive prose (outside double quotes) follows language decision (A); the text rendered inside the image (inside double quotes) follows language decision (B). Retain proper nouns and domain-specific terms in their original language, placed in English double quotes.\n\nwh_ratio: The target aspect ratio as \"W:H\". Set to \"\" when the output resolution should follow an input image instead.\n\nratio_follow: Which input image's resolution the output should follow (\"<image1>\", \"<image2>\", …). Set to \"\" when a specific aspect ratio is provided in wh_ratio.\n\nMutual exclusivity rule:\n\nIf wh_ratio has a value → ratio_follow must be \"\"\n\nIf ratio_follow is \"<imageX>\" → wh_ratio must be \"\"\n\nDo not include any text outside the JSON object — no greetings, no explanations, no markdown code fences."
+      }
+    },
+    {
+      "id": 78,
+      "type": "ResolutionSelector",
+      "pos": [
+        2040,
+        590
+      ],
+      "size": [
+        210,
+        150
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [
+        {
+          "label": "aspect_ratio",
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "label": "megapixels",
+          "name": "megapixels",
+          "type": "FLOAT",
+          "widget": {
+            "name": "megapixels"
+          },
+          "link": null
+        },
+        {
+          "label": "multiple",
+          "name": "multiple",
+          "type": "INT",
+          "widget": {
+            "name": "multiple"
+          },
+          "link": null
+        },
+        {
+          "label": "preview",
+          "name": "preview",
+          "shape": 7,
+          "type": "RESOLUTION_PREVIEW",
+          "widget": {
+            "name": "preview"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "width",
+          "name": "width",
+          "type": "INT",
+          "links": [
+            9140
+          ]
+        },
+        {
+          "label": "height",
+          "name": "height",
+          "type": "INT",
+          "links": [
+            9141
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "ResolutionSelector",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.5.2"
+        },
+        "widget_ue_connectable": {},
+        "ttNbgOverride": {
+          "bgcolor": "#335",
+          "groupcolor": "#88A",
+          "color": "#223"
+        }
+      },
+      "widgets_values": [
+        "16:9 (Widescreen)",
+        1.5,
+        8
+      ],
+      "widgets_values_named": {
+        "aspect_ratio": "16:9 (Widescreen)",
+        "megapixels": 1.5,
+        "multiple": 8
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 81,
+      "type": "SetNode",
+      "pos": [
+        2710,
+        -410
+      ],
+      "size": [
+        210,
+        34
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 35,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "输入",
+          "name": "*",
+          "type": "*",
+          "link": 9132
+        }
+      ],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "*",
+          "type": "*",
+          "links": []
+        }
+      ],
+      "title": "Set_prompt",
+      "properties": {
+        "Node name for S&R": "SetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "previousName": "prompt",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "prompt"
+      ],
+      "widgets_values_named": {
+        "Constant": "prompt"
+      }
+    },
+    {
+      "id": 82,
+      "type": "easy showAnything",
+      "pos": [
+        2440,
+        -890
+      ],
+      "size": [
+        400,
+        440
+      ],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "输入任何",
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 9133
+        }
+      ],
+      "outputs": [
+        {
+          "label": "output",
+          "name": "output",
+          "type": "*",
+          "links": [
+            9132
+          ]
+        }
+      ],
+      "title": "提示词预览",
+      "properties": {
+        "cnr_id": "comfyui-easy-use",
+        "ver": "54d080bf6a4f52da287e984f305243c10db097f5",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "A young woman practicing yoga in a cozy home living room, captured in a deep forward bend pose with arms extended straight forward and knees bent, head lowered, wearing a fitted grey sports bra and black leggings, soft natural light streaming through a large window, warm ambient lighting, minimalist Scandinavian interior with a wooden floor, a potted plant, a beige sofa in the background, a yoga mat under her, serene and calming atmosphere, photorealistic, high detail, 8K, cinematic composition, shallow depth of field"
+      ],
+      "widgets_values_named": {
+        "text": "A young woman practicing yoga in a cozy home living room, captured in a deep forward bend pose with arms extended straight forward and knees bent, head lowered, wearing a fitted grey sports bra and black leggings, soft natural light streaming through a large window, warm ambient lighting, minimalist Scandinavian interior with a wooden floor, a potted plant, a beige sofa in the background, a yoga mat under her, serene and calming atmosphere, photorealistic, high detail, 8K, cinematic composition, shallow depth of field"
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 83,
+      "type": "llama_cpp_instruct_adv",
+      "pos": [
+        2010,
+        -890
+      ],
+      "size": [
+        390,
+        450
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "llama_model",
+          "type": "LLAMACPPMODEL",
+          "link": 9134
+        },
+        {
+          "name": "parameters",
+          "shape": 7,
+          "type": "LLAMACPPARAMS",
+          "link": null
+        },
+        {
+          "name": "images",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 9139
+        },
+        {
+          "name": "queue_handler",
+          "shape": 7,
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "custom_prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "custom_prompt"
+          },
+          "link": 9138
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "STRING",
+          "links": [
+            9137
+          ]
+        },
+        {
+          "name": "output_list",
+          "shape": 6,
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "state_uid",
+          "type": "INT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "llama-cpp_vllm",
+        "ver": "c3a6314175e440b4bfc6526ba8ea1156bc0d9de3",
+        "ue_properties": {
+          "widget_ue_connectable": {
+            "preset_prompt": true,
+            "custom_prompt": true,
+            "system_prompt": true,
+            "inference_mode": true,
+            "max_frames": true,
+            "max_size": true,
+            "seed": true,
+            "force_offload": true,
+            "save_states": true
+          },
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        },
+        "Node name for S&R": "llama_cpp_instruct_adv",
+        "aux_id": "lihaoyun6/ComfyUI-llama-cpp_vlm"
+      },
+      "widgets_values": [
+        "Empty - Nothing",
+        "",
+        "# Role\n你是一个顶级的视觉语言模型（VLM）专家与创意画面设计师，精通摄影、绘画、电影工业级镜头美学以及各大主流图像生成模型（如 Midjourney、Stable Diffusion、FLUX）的提示词工程。\n\n# Core Task\n你的任务是根据用户输入的“图片”和/或“基础提示词”，输出一段经过深度优化、极具画面感、细节丰富且构图考究的**英文提示词**。\n\n# Execution Logic\n1. 【图文结合模式（有图 + 有基础提示词）】：\n   - 仔细分析图片：反推图片中的核心主体、材质、光影、色彩调性、艺术风格（如：赛博朋克、新现实主义、胶片风、Ukiyo-e 等）。\n   - 分析构图与镜头：识别视角（如：低角度仰拍、黄金分割构图、特写、中景、俯瞰等）、镜头参数感（如：大光圈虚化、深景深）。\n   - 结合用户输入的基础提示词：以基础提示词为创意核心，将反推出来的风格、构图、光影细节有机融合并进行艺术化扩充。\n\n2. 【纯文本模式（无图 + 只有基础提示词）】：\n   - 深度挖掘用户基础提示词的潜在意图。\n   - 补充具体的画面细节（如主体的衣着、微表情、环境氛围、天气、光照类型如逆光/丁达尔效应）。\n   - 引入专业的摄影或绘画术语来规范构图、色彩和质感，大幅提升画面精致度。\n\n# Output Constraints (Strict)\n- /no_think，关闭思考模式，**禁止输出思考过程**\n- 无论哪种模式，最终**仅输出优化后的英文提示词**。\n- 严禁包含任何前言、后记、解释、分析过程或“好的，这是为您优化的提示词：”等过渡性文本。\n- 严禁使用任何 Markdown 格式包裹（如不需要 ``` 或 ** 符号），直接输出纯文本。",
+        "images",
+        24,
+        256,
+        1108117797384745,
+        "fixed",
+        true,
+        false
+      ],
+      "widgets_values_named": {
+        "preset_prompt": "Empty - Nothing",
+        "custom_prompt": "",
+        "system_prompt": "# Role\n你是一个顶级的视觉语言模型（VLM）专家与创意画面设计师，精通摄影、绘画、电影工业级镜头美学以及各大主流图像生成模型（如 Midjourney、Stable Diffusion、FLUX）的提示词工程。\n\n# Core Task\n你的任务是根据用户输入的“图片”和/或“基础提示词”，输出一段经过深度优化、极具画面感、细节丰富且构图考究的**英文提示词**。\n\n# Execution Logic\n1. 【图文结合模式（有图 + 有基础提示词）】：\n   - 仔细分析图片：反推图片中的核心主体、材质、光影、色彩调性、艺术风格（如：赛博朋克、新现实主义、胶片风、Ukiyo-e 等）。\n   - 分析构图与镜头：识别视角（如：低角度仰拍、黄金分割构图、特写、中景、俯瞰等）、镜头参数感（如：大光圈虚化、深景深）。\n   - 结合用户输入的基础提示词：以基础提示词为创意核心，将反推出来的风格、构图、光影细节有机融合并进行艺术化扩充。\n\n2. 【纯文本模式（无图 + 只有基础提示词）】：\n   - 深度挖掘用户基础提示词的潜在意图。\n   - 补充具体的画面细节（如主体的衣着、微表情、环境氛围、天气、光照类型如逆光/丁达尔效应）。\n   - 引入专业的摄影或绘画术语来规范构图、色彩和质感，大幅提升画面精致度。\n\n# Output Constraints (Strict)\n- /no_think，关闭思考模式，**禁止输出思考过程**\n- 无论哪种模式，最终**仅输出优化后的英文提示词**。\n- 严禁包含任何前言、后记、解释、分析过程或“好的，这是为您优化的提示词：”等过渡性文本。\n- 严禁使用任何 Markdown 格式包裹（如不需要 ``` 或 ** 符号），直接输出纯文本。",
+        "inference_mode": "images",
+        "max_frames": 24,
+        "max_size": 256,
+        "seed": 1108117797384745,
+        "control_after_generate": "fixed",
+        "force_offload": true,
+        "save_states": false
+      }
+    },
+    {
+      "id": 84,
+      "type": "llama_cpp_model_loader",
+      "pos": [
+        1600,
+        -890
+      ],
+      "size": [
+        390,
+        290
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "llama_model",
+          "type": "LLAMACPPMODEL",
+          "links": [
+            9134
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "llama-cpp_vllm",
+        "ver": "c3a6314175e440b4bfc6526ba8ea1156bc0d9de3",
+        "ue_properties": {
+          "widget_ue_connectable": {
+            "model": true,
+            "mmproj": true,
+            "chat_handler": true,
+            "n_ctx": true,
+            "vram_limit": true,
+            "image_min_tokens": true,
+            "image_max_tokens": true
+          },
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        },
+        "Node name for S&R": "llama_cpp_model_loader",
+        "aux_id": "lihaoyun6/ComfyUI-llama-cpp_vlm"
+      },
+      "widgets_values": [
+        "Qwen3.8\\qwen3.8-27b-abliterated-3.69bpw-12GB-MTP.gguf",
+        "Qwen3.8\\qwen3.8-27b-mmproj-F16.gguf",
+        "Qwen3.8",
+        4096,
+        -1,
+        0,
+        0,
+        false
+      ],
+      "widgets_values_named": {
+        "model": "Qwen3.8\\qwen3.8-27b-abliterated-3.69bpw-12GB-MTP.gguf",
+        "mmproj": "Qwen3.8\\qwen3.8-27b-mmproj-F16.gguf",
+        "chat_handler": "Qwen3.8",
+        "n_ctx": 4096,
+        "vram_limit": -1,
+        "image_min_tokens": 0,
+        "image_max_tokens": 0,
+        "load_mtp": false
+      }
+    },
+    {
+      "id": 86,
+      "type": "PrimitiveString",
+      "pos": [
+        2450,
+        -890
+      ],
+      "size": [
+        230,
+        40
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "value",
+          "name": "value",
+          "type": "STRING",
+          "widget": {
+            "name": "value"
+          },
+          "link": 9137
+        }
+      ],
+      "outputs": [
+        {
+          "label": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            9133
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.33.2",
+        "ue_properties": {
+          "version": "7.8",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "value": ""
+      }
+    },
+    {
+      "id": 88,
+      "type": "Fast Groups Bypasser (rgthree)",
+      "pos": [
+        2150,
+        -1020
+      ],
+      "size": [
+        270,
+        60
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "label": "可选连接",
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": []
+        }
+      ],
+      "title": "组开关",
+      "properties": {
+        "matchColors": "",
+        "matchTitle": "llama提示词反推与优化",
+        "showNav": true,
+        "showAllGraphs": true,
+        "sort": "position",
+        "customSortAlphabet": "",
+        "toggleRestriction": "default",
+        "ue_properties": {
+          "version": "7.8",
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        }
+      },
+      "color": "#a81414",
+      "bgcolor": "#940000"
+    },
+    {
+      "id": 89,
+      "type": "GetNode",
+      "pos": [
+        1410,
+        -920
+      ],
+      "size": [
+        210,
+        50
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 14,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            9138
+          ]
+        }
+      ],
+      "title": "Get_prompt_base",
+      "properties": {
+        "Node name for S&R": "GetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "prompt_base"
+      ],
+      "widgets_values_named": {
+        "Constant": "prompt_base"
+      }
+    },
+    {
+      "id": 90,
+      "type": "GetNode",
+      "pos": [
+        1610,
+        -550
+      ],
+      "size": [
+        210,
+        50
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 15,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "label": "输出",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9139
+          ]
+        }
+      ],
+      "title": "Get_image_01",
+      "properties": {
+        "Node name for S&R": "GetNode",
+        "aux_id": "kijai/ComfyUI-KJNodes",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "image_01"
+      ],
+      "widgets_values_named": {
+        "Constant": "image_01"
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 91,
+      "type": "EmptyFlux2LatentImage",
+      "pos": [
+        2300,
+        250
+      ],
+      "size": [
+        210,
+        110
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 9140
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 9141
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            9143
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "ue_properties": {
+          "widget_ue_connectable": {
+            "width": true,
+            "height": true
+          },
+          "version": "8.0",
+          "input_ue_unconnectable": {}
+        },
+        "Node name for S&R": "EmptyFlux2LatentImage"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1
+      ],
+      "widgets_values_named": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      }
+    },
+    {
+      "id": 92,
+      "type": "ComfySwitchNode",
+      "pos": [
+        2520,
+        250
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 9142
+        },
+        {
+          "name": "on_true",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 9143
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "LATENT",
+          "links": [
+            9144
+          ]
+        }
+      ],
+      "title": "ture 自定义尺寸 | flase 图1尺寸",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.43.2",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "switch": false
+      }
+    }
+  ],
+  "links": [
+    [
+      9052,
+      30,
+      0,
+      31,
+      0,
+      "MODEL"
+    ],
+    [
+      9054,
+      32,
+      0,
+      37,
+      0,
+      "MODEL"
+    ],
+    [
+      9058,
+      37,
+      0,
+      38,
+      0,
+      "LATENT"
+    ],
+    [
+      9059,
+      34,
+      0,
+      38,
+      1,
+      "VAE"
+    ],
+    [
+      9060,
+      38,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      9069,
+      29,
+      0,
+      27,
+      0,
+      "IMAGE"
+    ],
+    [
+      9098,
+      60,
+      0,
+      29,
+      0,
+      "IMAGE"
+    ],
+    [
+      9099,
+      53,
+      0,
+      62,
+      0,
+      "STRING"
+    ],
+    [
+      9104,
+      38,
+      0,
+      65,
+      0,
+      "IMAGE"
+    ],
+    [
+      9106,
+      67,
+      0,
+      68,
+      0,
+      "IMAGE"
+    ],
+    [
+      9107,
+      64,
+      0,
+      67,
+      0,
+      "IMAGE"
+    ],
+    [
+      9108,
+      66,
+      0,
+      67,
+      1,
+      "IMAGE"
+    ],
+    [
+      9111,
+      71,
+      0,
+      56,
+      0,
+      "IMAGE"
+    ],
+    [
+      9113,
+      33,
+      0,
+      73,
+      0,
+      "CLIP"
+    ],
+    [
+      9114,
+      73,
+      0,
+      72,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      9115,
+      33,
+      0,
+      74,
+      0,
+      "CLIP"
+    ],
+    [
+      9116,
+      74,
+      0,
+      72,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      9117,
+      34,
+      0,
+      72,
+      2,
+      "VAE"
+    ],
+    [
+      9118,
+      72,
+      0,
+      37,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      9119,
+      72,
+      1,
+      37,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      9120,
+      63,
+      0,
+      73,
+      1,
+      "STRING"
+    ],
+    [
+      9121,
+      75,
+      0,
+      76,
+      0,
+      "MODEL"
+    ],
+    [
+      9122,
+      31,
+      0,
+      75,
+      0,
+      "MODEL"
+    ],
+    [
+      9123,
+      76,
+      0,
+      32,
+      0,
+      "MODEL"
+    ],
+    [
+      9127,
+      27,
+      0,
+      28,
+      0,
+      "INT"
+    ],
+    [
+      9128,
+      27,
+      1,
+      28,
+      1,
+      "INT"
+    ],
+    [
+      9129,
+      60,
+      0,
+      72,
+      4,
+      "IMAGE"
+    ],
+    [
+      9132,
+      82,
+      0,
+      81,
+      0,
+      "*"
+    ],
+    [
+      9133,
+      86,
+      0,
+      82,
+      0,
+      "STRING"
+    ],
+    [
+      9134,
+      84,
+      0,
+      83,
+      0,
+      "LLAMACPPMODEL"
+    ],
+    [
+      9137,
+      83,
+      0,
+      86,
+      0,
+      "STRING"
+    ],
+    [
+      9138,
+      89,
+      0,
+      83,
+      4,
+      "STRING"
+    ],
+    [
+      9139,
+      90,
+      0,
+      83,
+      2,
+      "IMAGE"
+    ],
+    [
+      9140,
+      78,
+      0,
+      91,
+      0,
+      "INT"
+    ],
+    [
+      9141,
+      78,
+      1,
+      91,
+      1,
+      "INT"
+    ],
+    [
+      9142,
+      28,
+      0,
+      92,
+      0,
+      "LATENT"
+    ],
+    [
+      9143,
+      91,
+      0,
+      92,
+      1,
+      "LATENT"
+    ],
+    [
+      9144,
+      92,
+      0,
+      37,
+      3,
+      "LATENT"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Models",
+      "bounding": [
+        1580,
+        -360,
+        2370,
+        1130
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 6,
+      "title": "图像对比",
+      "bounding": [
+        4010,
+        -360,
+        1510,
+        1080
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 7,
+      "title": "输入部分",
+      "bounding": [
+        970,
+        -360,
+        560,
+        1080
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 8,
+      "title": "llama提示词反推与优化",
+      "bounding": [
+        1580,
+        -990,
+        840,
+        590
+      ],
+      "color": "#8AA",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.4832929883138752,
+      "offset": [
+        -48.36006850374278,
+        1679.9165370914297
+      ]
+    },
+    "frontendVersion": "1.57.4",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true,
+    "ue_links": [],
+    "links_added_by_ue": []
+  },
+  "version": 0.4,
+  "seed_widgets": {
+    "37": 0,
+    "83": 6
+  }
+}
