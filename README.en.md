@@ -2,18 +2,33 @@
 
 [中文](README.md) ｜ **English** ｜ [日本語](README.ja.md)
 
-A ComfyUI node wrapping the **288 poses / 1439 multi-angle reference images** of
-[RuiC-PoseAtlas](https://github.com/HRuiCcc/RuiC-PoseAtlas).
-Every pose comes in two renders: **mannequin line art** (POSE-DB-01) and a
-**grayscale depth map** (POSE-DB-02). Pick an image in the gallery and the node
-outputs `IMAGE` directly — ready for ControlNet, img2img or an edit model.
+A ComfyUI node wrapping the **three galleries** of
+[RuiC-PoseAtlas](https://github.com/HRuiCcc/RuiC-PoseAtlas):
 
-> ⚠️ **This repository ships no full-size originals.** Image rights belong to the
-> original author; see step 3 under "Install". Depth thumbnails are bundled
-> (10.7 MB) so the gallery works out of the box; depth originals are fetched one
-> at a time with the `↓ 原图` button in the panel.
+| Gallery | Items | Spec | Contents |
+|---|---|---|---|
+| **Poses** | 1,439 | 900×1200 PNG | 288 poses × 5 angles (front / three-quarter / side / high / low), in two renders |
+| **Costumes** | 1,407 | 1366×2048 WEBP | Organised by season × category × colour, 8 seasons × 10 categories |
+| **Portraits** | 1,499 | full-size PNG | 893 faces + 606 styling shots, sorted into 4 hair-length buckets |
+
+**4,345 items** in total. Pick one in the gallery and the node outputs `IMAGE`
+directly — ready for ControlNet, img2img or an edit model.
+
+> ⚠️ **This repository ships no images at all** — not even thumbnails. Zero.
+> Image rights belong to the original authors, so after installing you must run
+> the download script (step 3 under "Install"): 4,345 thumbnails, about 59 MB.
 
 ![Gallery panel](docs/gallery-en.jpg)
+
+<details><summary>Costume / portrait / depth galleries</summary>
+
+![Costume gallery](docs/gallery-costume.jpg)
+
+![Portrait gallery](docs/gallery-portrait.jpg)
+
+![Depth gallery](docs/gallery-depth.jpg)
+
+</details>
 
 <details><summary>中文 / 日本語 interface</summary>
 
@@ -23,35 +38,34 @@ outputs `IMAGE` directly — ready for ControlNet, img2img or an edit model.
 
 </details>
 
-<details><summary>Depth mode</summary>
-
-![Depth gallery](docs/gallery-depth.jpg)
-
-In depth mode each card carries a **`↓ 原图`** button in its top-right corner; one
-click fetches that angle's 900×1200 original. Downloaded cards show **`✓ 已下载`**.
-
-</details>
-
 ---
 
 ## What this is
 
-RuiC-PoseAtlas is a static pose reference gallery: each pose ships **front /
-three-quarter / side / high-angle / low-angle** views of a faceless grey
-mannequin, made for reading volumes, proportions, joints and lens relationships.
+RuiC-PoseAtlas is a static reference library. This project moves its browsing
+experience into ComfyUI: no switching to a browser, no hunting for files, no
+remembering 4,345 filenames — and one search box that matches Chinese, English
+and Japanese.
 
-This project moves that browsing experience into ComfyUI: no switching to a
-browser, no hunting for files, no remembering 1439 filenames.
+**The pose gallery** gives each pose 5 viewpoints of a faceless grey mannequin,
+made for reading volumes, proportions, joints and lens relationships. The same
+1,439 variants (ids match one-to-one) also come as **grayscale depth renders**
+where white is closer to the camera. Line art is good for skeleton extraction,
+depth maps are good for ControlNet depth — and for couple poses the front/back
+layering is visible in depth, which line art cannot show.
 
-**v1.1 adds depth maps**: the same 1439 variants (ids match one-to-one) rendered
-as grayscale depth, where white is closer to the camera. Line art is good for
-skeleton extraction, depth maps are good for ControlNet depth — and for couple
-poses the front/back layering is visible in depth, which line art cannot show.
+**v2.0 adds the costume and portrait galleries**: costumes are full-outfit
+1366×2048 WEBPs (references for outfit swaps and clothing-style transfer),
+portraits are clean face and styling shots without background clutter (character
+consistency, hair references). All three galleries share one panel, one search
+box and one set of trilingual names.
 
-| Render | Source | Spec | Good for |
+| Gallery | Render | Source | Good for |
 |---|---|---|---|
-| Line art | [POSE-DB-01](https://ai-pose-gallery.pages.dev/) | 900×1200 PNG | Skeleton extraction, img2img, edit models |
-| Depth | [POSE-DB-02](https://ai-pose-depth-gallery.pages.dev/) | 900×1200 grayscale PNG | ControlNet depth, compositing that needs layering |
+| Poses | Line art | [POSE-DB-01](https://ai-pose-gallery.pages.dev/) | Skeleton extraction, img2img, edit models |
+| Poses | Depth | [POSE-DB-02](https://ai-pose-depth-gallery.pages.dev/) | ControlNet depth, compositing that needs layering |
+| Costumes | Original | RuiC-PoseAtlas | Outfit swaps, clothing style, styling references |
+| Portraits | Original | RuiC-PoseAtlas | Character consistency, hair / makeup references |
 
 ## Trilingual interface (中文 / EN / 日本語)
 
@@ -60,20 +74,23 @@ The panel header has a language switch; one click flips the whole interface:
 | Where | What switches |
 |---|---|
 | UI strings | Title, search box, sidebar heading, buttons, notices — three sets |
-| Item names | Pose name, category, angle; series name and short name |
+| Item names | Pose name, category, angle; costume season / category / colour; portrait section / hair / styling |
 | Search | All three languages match the same entry |
 
 **These translations are not ours.** Upstream RuiC-PoseAtlas already ships all
 three names (`poses.json` carries `names.zh / .en / .ja` for every pose). This
 project only reshapes them into the `labels` field of `index.json`; not a single
-string was translated here.
+string was translated here. (Costume tag words and portrait styling names are
+keys upstream — their three-language tables live in `scripts/_i18n/` and
+`build_index.py` folds them in.)
 
-The choice is remembered in `localStorage` (key `poseatlas-node-lang`).
+The choice is stored in browser `localStorage` (key `poseatlas-node-lang`), so the
+panel reopens in whatever language you last used.
 
-> **The value stored in the dropdown is always the Chinese string**
-> (e.g. `[性感全身] 站姿 / P001 ... / 正面`). That keeps a workflow openable under
-> any interface language — switching language only changes what you see, never
-> the saved parameters.
+> **The value stored in the dropdown is always the Chinese string** (e.g.
+> `[性感全身] 站姿 / P001 ... / 正面`). That way one workflow opens correctly under
+> any interface language — switching language only changes display, never a saved
+> parameter.
 
 ## The two nodes
 
@@ -81,36 +98,37 @@ The choice is remembered in `localStorage` (key `poseatlas-node-lang`).
 
 | | |
 |---|---|
-| Inputs | `pose` (gallery selection), `render` (line art / depth), `invert_mask` |
+| Inputs | `collection` (poses / costumes / portraits), `pose` (gallery choice), `render` (line art / depth), `invert_mask` |
 | Outputs | `image` `IMAGE` · `mask` `MASK` · `item_name` `STRING` |
 
-The node only shows `invert_mask` and the "Open gallery" button — `pose` and
-`render` are internal UI state handled by the panel. `render` still exists
-because the Python side reads its value to decide between `img/` and `depth/img/`;
-removing it would leave the node unable to pick a render.
+`collection`, `pose` and `render` are internal UI state owned by the panel; the
+node only exposes `invert_mask` and "Open gallery". They are kept as widgets
+because the Python side reads them to decide which files to load — drop them and
+the node no longer knows which set you want.
 
-<img src="docs/node-loader.jpg" width="300" alt="PoseAtlas gallery node">
+<img src="docs/node-loader.jpg" width="300" alt="PoseAtlas loader node">
 
-In depth mode the node draws the depth thumbnail directly — the layering of a
-couple pose is immediately readable:
+In depth mode the node itself draws the depth thumbnail, so couple poses reveal
+their front/back layering at a glance:
 
-<img src="docs/node-depth.jpg" width="300" alt="PoseAtlas gallery node in depth mode">
+<img src="docs/node-depth.jpg" width="300" alt="PoseAtlas loader node (depth mode)">
 
-"Open gallery" brings up a full-screen panel:
+Clicking "Open gallery" gives a full-screen panel:
 
-- **Language**: `中文 / EN / 日本語`
-- **Render**: `线稿 / 深度` — switches every thumbnail at once
-- **Four series tabs**: Sexy (80) / Standard (73) / Upper body (80) / Couples (55)
-- **Sidebar categories**: follows the selected series, 26 sub-categories in total
-- **Thumbnail grid**: the 5 angles of one pose share a card; small chips switch between them
-- **Download button**: in depth mode, `↓ 原图` fetches that angle's 900×1200 original
-- **Search**: matches Chinese / English / Japanese names, numbers and categories
-- **Footer**: number, name, angle and file path of the current selection
+- **Collection tabs**: poses 1,439 / costumes 1,407 / portraits 1,499 — switching swaps the whole dataset
+- **Language switch**: `中文 / EN / 日本語`
+- **Render switch**: `线稿 / 深度` (pose gallery only; greyed out for the others)
+- **Horizontal tabs**: poses by 4 series (sexy full-body 80 / standard full-body 73 / upper body 80 / couple 55) × 26 sub-categories; costumes by 8 seasons; portraits by face / styling
+- **Left sidebar**: switches with the tab above, counts recomputed live for the current tab
+- **Thumbnail grid**: for poses, all 5 angles of one pose collapse into a single card with in-card angle chips
+- **Download button**: in depth mode every card carries `↓ 原图`, which fetches that angle's 900×1200 original
+- **Search box**: Chinese / English / Japanese names, ids and categories, spanning all galleries
+- **Footer**: id, name, category and file path of the current selection
 
 ### PoseAtlas Info (`PoseAtlasInfo`)
 
-For text only. Inputs `pose` + `language` (zh / en / ja); outputs `item_name` /
-`category` / `series` so you can splice them into a prompt.
+For text only, no image. Feed it `collection` + `pose` + `language` (zh / en / ja)
+and it outputs `item_name` / `category` / `series` for prompt assembly.
 
 <img src="docs/node-info.jpg" width="300" alt="PoseAtlas info node">
 
@@ -125,74 +143,90 @@ cd ComfyUI/custom_nodes
 git clone https://github.com/mugicha-AI/ComfyUI-PoseAtlas.git
 ```
 
-No git? Use `Code → Download ZIP` on GitHub and unpack it into
+No git? Use `Code → Download ZIP` on GitHub and unzip into
 `ComfyUI/custom_nodes/ComfyUI-PoseAtlas`.
 
 ### 2. Check the layout
 
-After cloning you should see this — `img/`, `thumbs/` and `depth/img/` are empty,
-`depth/thumbs/` already has 1439 files:
+Right after install it looks like this — **every image folder is empty** (only a
+`.gitkeep` placeholder):
 
 ```
 ComfyUI/custom_nodes/ComfyUI-PoseAtlas/
 ├── __init__.py
 ├── scripts/
-│   ├── download_images.py
-│   └── build_index.py
+│   ├── download_images.py      image downloader
+│   ├── build_index.py          index rebuild (only if you edit the metadata)
+│   └── _i18n/                  trilingual tables for costume tags / styling names
 └── web/
-    ├── poseatlas.js
+    ├── poseatlas.js            gallery panel front-end
     └── atlas/
-        ├── poses.json            ← pose metadata (trilingual names / categories / angles)
-        ├── index.json            ← front-end index (trilingual labels + depth paths)
-        ├── img/                  ← empty, download it
-        ├── thumbs/               ← empty, download it
-        └── depth/
-            ├── img/              ← empty, depth originals fetched on demand
-            └── thumbs/           ← 1439 × 300×400, bundled
+        ├── poses.json          metadata for 288 poses
+        ├── costumes.json       metadata for 1,407 costumes
+        ├── faces.json          metadata for 1,499 portraits
+        ├── index.json          front-end index (4,345 entries, trilingual labels)
+        ├── img/                ← empty, pose line-art originals
+        ├── thumbs/             ← empty, pose line-art thumbnails
+        ├── costume/{img,thumbs}   ← empty
+        ├── portrait/{img,thumbs}  ← empty
+        └── depth/{img,thumbs}     ← empty
 ```
 
-### 3. Download the line-art images (required, otherwise line art is empty)
+### 3. Download the images (required, otherwise the gallery is empty)
 
-Line-art images belong to **ギア (@giaaibusi)**. This project does **not** bundle
-or redistribute full-size images; it only ships a script that pulls them from the
-author's public repository.
+Image rights belong to **ギア (@giaaibusi)** and the other original authors. This
+project **does not bundle or redistribute** them; the script fetches them from the
+public sources:
 
 ```bash
 cd ComfyUI/custom_nodes/ComfyUI-PoseAtlas
-python scripts/download_images.py
+python scripts/download_images.py                # thumbnails only, ≈59 MB (start here)
+python scripts/download_images.py --full         # plus full-size originals, ≈5.4 GB
 ```
 
-- **2878 files** (1439 PNG originals + 1439 thumbnails), about **660 MB**
-- Rotates through 6 mirrors automatically, moving on when one times out
-- Interrupted? Just re-run — existing files are skipped and it resumes
-- Only want to look at the UI first: `python scripts/download_images.py --thumbs-only` (≈22 MB)
+| Command | What you get | Size |
+|---|---|---|
+| `python scripts/download_images.py` | 4,345 thumbnails (poses / costumes / portraits) | ≈59 MB |
+| `python scripts/download_images.py --full` | the above + pose line art, costume and portrait originals | ≈5.4 GB |
+| `python scripts/download_images.py --only costume` | one gallery only (`pose` / `costume` / `portrait`) | — |
+| `python scripts/download_images.py --dry-run` | report what is missing, download nothing | — |
+| `python scripts/download_images.py --workers 12` | concurrency (default 8) | — |
+
+- Every set cycles through several mirrors automatically (`raw.githubusercontent` → `jsdelivr` → `ghfast` → `gh-proxy`); a timeout moves to the next one
+- Interrupted? Just re-run — existing files are skipped, so it resumes
+- Magic bytes are checked before writing, so an error page never lands as a fake image
+- Want just a part? `--only pose` is fastest (22 MB of thumbnails)
 
 ### 4. Depth originals (on demand, never in bulk)
 
-The depth **thumbnails are already in the repo**, so after cloning the panel shows
-all 1439 of them, selectable and usable at 300×400. For the 900×1200 original,
-switch the panel to depth mode and click **`↓ 原图`** on the card; the server pulls
-that one image from the source site into `web/atlas/depth/img/` and keeps using
-the local copy from then on.
+The depth set is the **exception**. The source site states:
 
-> There is **deliberately no bulk download script**: the source site states
 > 「このデータベースの画像を一括でダウンロードすること（ツール等による自動取得を含む）と、
-> 取得した画像の再配布・転載・販売は禁止です」 — bulk downloading, including
-> automated retrieval, and redistribution are forbidden. Fetching one image at a
-> time as reference is the intended use; scraping the whole set is not. Please
-> only click the few you actually need.
->
-> If an original is missing, the node falls back to the thumbnail and appends
-> 「深度缩略图，原图未下载」 to `item_name`, so the pipeline still runs — just at
-> lower resolution.
+> 取得した画像の再配布・転載・販売は禁止です」
+> (Bulk downloading — including automated fetching by tools — and redistribution,
+> reposting or resale of the obtained images are forbidden.)
+
+So the download script **does not fetch depth originals** and deliberately offers
+no bulk option. Instead, switch the panel to `深度` and click the **`↓ 原图`**
+button on a card: the server fetches **that one** 900×1200 original from the source
+site into `web/atlas/depth/img/`, and immediately derives a 300×400 thumbnail into
+`depth/thumbs/`. From then on it uses the local file.
+
+Fetching one you actually need is "reference an image while generating"; bulk
+scraping is not. Please only click the ones you really use.
+
+> Depth thumbnails are produced when you download an original — they are not
+> shipped. On a new machine, or to rebuild them, run
+> `python scripts/download_images.py --only depth-thumbs` to re-derive thumbnails
+> for every depth original you already have locally (no network).
 
 ### 5. Restart ComfyUI
 
 The node appears under the **`PoseAtlas`** category in the right-click menu, or
 search `PoseAtlas` by double-clicking the canvas.
 
-> **After editing anything under `web/`, hard-refresh with Ctrl+F5**, otherwise
-> the browser keeps running the old front-end.
+> **After editing anything under `web/`, force-reload with Ctrl+F5** or the
+> browser keeps using the old front-end.
 
 ---
 
@@ -205,76 +239,97 @@ Drop a **PoseAtlas Gallery** node, click "Open gallery", pick one, and wire
 
 ### With ControlNet (recommended)
 
-Line art → skeleton → ControlNet → image. These settings are verified locally:
+Mannequin line art → skeleton → ControlNet → image. These settings are verified
+on my machine:
 
 ```
-PoseAtlas Gallery (render=line art)
+PoseAtlas Gallery (collection=poses, render=line art)
    └─ image → PoseAndFaceDetection → DrawViTPose → ControlNetApplyAdvanced
-                                                     ├─ control_net: xinsir_cn_union_sdxl_1.0_promax
-                                                     ├─ strength: 0.65
-                                                     └─ end_percent: 0.85
-                                                        └─ KSampler → VAEDecode → SaveImage
+                                                    ├─ control_net: xinsir_cn_union_sdxl_1.0_promax
+                                                    ├─ strength: 0.65
+                                                    └─ end_percent: 0.85
+                                                       └─ KSampler → VAEDecode → SaveImage
 ```
 
-**Key parameters**：
+**Key settings**:
 
-| Parameter | Value | Why |
+| Setting | Value | Why |
 |---|---|---|
-| `PoseAndFaceDetection` width/height | **must match the output aspect** | feeding a 3:4 image while declaring 832×480 crops the legs |
-| ControlNet strength | `0.65` | 0.9 yields a line-art look; too low loses the pose |
-| end_percent | `0.85` | lets the model free up texture in later steps |
-| Negative prompt | add `stick figure, sketch, lineart` | stops it from drawing the skeleton itself |
+| `PoseAndFaceDetection` width/height | **must match the output aspect ratio** | Feed a 3:4 image but enter 832×480 and the legs get cut off |
+| ControlNet strength | `0.65` | 0.9 gives you a line-art look; too low loses the pose |
+| end_percent | `0.85` | Lets the model own texture in later steps |
+| Negative prompt | add `stick figure, sketch, lineart` | Stops it drawing over the skeleton |
 
 The skeleton node comes from
 [ComfyUI-WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess)
-(it ships ViTPose ONNX, so no extra controlnet_aux needed). Without it, feed
-`image` straight into img2img or an edit model.
+(it bundles the ViTPose ONNX, so no extra controlnet_aux install). Without it, you
+can also feed `image` straight into img2img or an edit model as a reference.
 
 ### Depth maps for ControlNet depth
 
-Switch the panel render to depth and wire `image` straight into a depth
-ControlNet's image input — no depth preprocessor needed, the image *is* the depth
-map. White is near, dark grey is far, matching the usual depth-ControlNet
+Switch the render to `深度` in the panel and wire `image` directly into the depth
+ControlNet's image input — no depth preprocessor needed, the image already is a
+depth map. White is near, dark grey is far, matching the usual depth-ControlNet
 convention.
 
-Couple poses are better in depth: ViTPose only detects one person from line art,
-while the depth map keeps both figures and their layering, so depth ControlNet or
-a depth-of-field composite won't drop anyone.
+Couple poses are better served by depth: ViTPose only detects one person in line
+art, while the depth map preserves both figures' front/back relationship, so
+feeding it to depth ControlNet or using it for a depth-of-field composite loses
+nobody.
 
-### With Qwen-Image 2.1 editing
+### Outfit swaps with the costume gallery
 
-The mannequin line art already reads as "edit this": using it as a reference lets
-the model keep the pose while repainting the texture.
+Costume entries are full-outfit images — wire them into an edit model's reference
+input (Qwen-Image / Flux Kontext / Krea2):
 
 ```
-PoseAtlas Gallery → image → TextEncodeQwenImage21's images.image_1
+PoseAtlas Gallery (collection=costumes) → image → TextEncodeQwenImage21 images.image_2
+PoseAtlas Gallery (collection=poses)    → image → TextEncodeQwenImage21 images.image_1   ← pose
 ```
 
-State explicitly in the prompt that the stance, body proportions and camera angle
-must stay, then describe the look you want.
+Write the prompt as "dress the person in `<image1>` with the outfit from
+`<image2>`, keeping `<image1>`'s pose and body proportions". Costume images come
+with a model wearing them; when what you want is **the clothes, not the person**,
+say so explicitly: "take only the garment style and colours; identity comes from
+`<image1>`".
+
+### Character consistency with the portrait gallery
+
+Portraits are clean face and styling shots, good as face references:
+
+```
+PoseAtlas Gallery (collection=portraits, section=face) → image → reference input
+```
+
+Combined with the pose gallery, hand `image_1` the pose and `image_2` the face and
+identify each in the prompt.
 **Note**: the mannequin's waist-to-chest ratio is exaggerated and the resulting
 person tends to look bulky — add "use normal human proportions" to the prompt.
 
 ### Example workflows
 
-`examples/` has three workflows; drag them in, or use `Workflow → Open`:
+`examples/` holds 8 workflows; drag them in, or use `Workflow → Open`. The matching
+`.png` is a full-canvas screenshot of each workflow, so you can preview before
+loading.
 
-| File | Chain | Base model |
-|---|---|---|
-| `basic_loader.json` | Gallery → SaveImage (minimal) | none |
-| `Flux3Klein-PoseAtlas.json` | Gallery + reference → prompt rewrite → generate → side-by-side output | Flux3 Klein |
-| `QW2.1-PoseAtlas.json` | Gallery + reference → prompt rewrite → edit → side-by-side output | Qwen-Image 2.1 |
-
-Both full examples work the same way: `PoseAtlasLoader` supplies the pose line
-art, one or two character/style references are added, a prompt-rewriting LLM
-folds the pose description into the prompt, the image is generated, and finally
-"reference | result" are stitched together and saved.
+| File | Galleries used | Chain | Base model |
+|---|---|---|---|
+| `basic_loader.json` | poses | Gallery → SaveImage (minimal) | none |
+| `Flux3Klein-PoseAtlas.json` | poses | Gallery + reference → prompt rewrite → generate → side-by-side | Flux3 Klein |
+| `QW2.1-PoseAtlas.json` | poses | Gallery + reference → prompt rewrite → edit → side-by-side | Qwen-Image 2.1 |
+| `Flux3Klein-换装-PoseAtlas.json` | costumes | Costume + person reference → outfit swap | Flux3 Klein |
+| `QW2.1-换装-PoseAtlas.json` | costumes | Costume + person reference → outfit swap | Qwen-Image 2.1 |
+| `QW2.1-PoseAtlas-Assembly.json` | poses + costumes + portraits | **three galleries together**: pose / outfit / face → composite | Qwen-Image 2.1 |
+| `Mugicha_Krea2_depth.json` | poses (depth) | Depth map → Krea2 ControlNet → image | Krea2 |
+| `Mugicha_MossImage_depth.json` | poses (depth) | Depth map → MossImage Control → image | MossImage |
 
 Caveats:
 
-- They rely on common custom nodes (`rgthree-comfy`, `comfyui-easy-use`, …); ComfyUI flags anything missing in red
+- They rely on common custom nodes (`rgthree-comfy`, `comfyui-easy-use`, `ComfyUI-WanAnimatePreprocess`, …); ComfyUI flags anything missing in red
 - Model filenames in the workflows are my local quantised names (e.g. `qwen_image_2.1_int8_convrot`) — swap in your own downloads
-- Both examples load a `multiple_angles` LoRA (helps multi-angle following); drop that node if you don't have it
+- The companion LoRAs differ: pose / composite workflows use `Qwen-Image-2.1-multiple_angles`
+  (helps multi-angle following), outfit swaps use `Qwen-Image-2.1-outfit-swap`, and the depth
+  workflows use their own depth-control LoRAs. Drop the node if you don't have one
 
 ---
 
@@ -299,18 +354,20 @@ cloud one:
 
 | Limitation | Cause | Workaround |
 |---|---|---|
+| **Not a single image in the repo** | Rights belong to the original author; no redistribution | Run `python scripts/download_images.py` after installing (≈59 MB) |
 | **Skeleton extraction finds only one person in couple poses (55 groups)** | ViTPose is single-person | Use the depth map with depth ControlNet, or feed `image` to an edit model |
-| Depth originals must be clicked one by one | The source site forbids bulk fetching | Download only what you need; thumbnails keep the pipeline running |
-| Depth thumbnails are 300×400 | Only thumbnails ship in the repo | Click `↓ 原图` for 900×1200 before a real generation |
+| Depth originals must be clicked one by one | The source site forbids bulk fetching | Download only what you need; no bulk script exists on purpose |
+| Depth thumbnails need the original first | Thumbnails are derived from the original | Clicking `↓ 原图` generates the thumbnail too |
 | Mannequin images have no alpha | Originals are RGB PNG | `mask` outputs all ones; only `invert_mask` applies |
 | The gallery loads client-side | The front-end reads from `/extensions/` | ~1 s on first open, cached afterwards |
+| Portrait originals are large | 1,499 PNGs, ≈4.6 GB | Skip `--full` to keep thumbnails only |
 | Third-party translation extensions rewrite panel text | They substitute from a hard-coded dictionary | The panel is marked `.notranslate`; if a plugin ignores it, update `ComfyUI-DD-Translation` to honour that convention |
 
 ## Content notice
 
-The original gallery's 26 categories include adult-oriented material
-("sexy / bold", "missionary" …) and targets adult creators. Obey your local laws
-and platform rules.
+The original gallery's categories include adult-oriented material
+("sexy / bold", "lingerie", "swimwear", "sexy" …) and target adult creators. Obey
+your local laws and platform rules.
 
 ---
 
@@ -319,13 +376,12 @@ and platform rules.
 | Item | License |
 |---|---|
 | Project code (`__init__.py`, `web/poseatlas.js`, `scripts/*`) | **MIT** |
-| Pose line art, depth maps, raw data, names (including the trilingual names) | **Copyright ギア (@giaaibusi)**, not covered by MIT |
-| Depth thumbnails (the 1439 files in this repo) | Same as above; browse index only, redistribution discouraged |
+| Pose line art, depth maps, costume images, portraits, raw data, names (including the trilingual names) | **Copyright ギア (@giaaibusi)**, not covered by MIT |
 
 The original author allows creative use (commercial, editing, reference) but
 **forbids redistributing, reposting or reselling the image data itself**. That is
-why this repo carries only thumbnails and download scripts, never full-size
-originals. If you fork this project, please keep it that way.
+why this repo carries not a single image — only metadata, the index and the
+download scripts. If you fork this project, please keep it that way.
 
 - Original / line-art site: [POSE-DB-01](https://ai-pose-gallery.pages.dev/)
 - Depth site: POSE-DB-02 <https://ai-pose-depth-gallery.pages.dev/>
@@ -347,7 +403,7 @@ and the content will be removed promptly.
 
 ## Video walkthrough
 
-Two videos cover this node — pick whichever platform you prefer:
+I have made a few videos covering this node — pick whichever platform you prefer:
 
 | Platform | Link |
 |---|---|
@@ -357,7 +413,7 @@ Two videos cover this node — pick whichever platform you prefer:
 ```
 PoseAtlas 实测：1439 张多角度人台线稿，我把它做成了 ComfyUI 节点
 ```
-*(Title as published: "PoseAtlas hands-on — 1439 multi-angle mannequin references, turned into a ComfyUI node". Both videos are in Chinese.)*
+*(Title as published: "PoseAtlas hands-on — 1439 multi-angle mannequin references, turned into a ComfyUI node". The videos are in Chinese.)*
 
 They walk through the gallery panel, the difference between line art and depth
 maps, the exact ControlNet skeleton-extraction settings, and why couple poses are

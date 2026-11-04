@@ -35,6 +35,7 @@ NODE_DIR = os.path.dirname(os.path.abspath(__file__))
 ATLAS_DIR = os.path.join(NODE_DIR, "web", "atlas")
 INDEX_FILE = os.path.join(ATLAS_DIR, "index.json")
 DEPTH_IMG_DIR = os.path.join(ATLAS_DIR, "depth", "img")
+DEPTH_THUMB_DIR = os.path.join(ATLAS_DIR, "depth", "thumbs")
 WEB_DIRECTORY = "./web"
 
 # 图集：显示名 → key
@@ -321,6 +322,29 @@ def _known_depth_stems():
     }
 
 
+def _write_depth_thumb(stem):
+    """顺手把刚取回的深度原图缩成 300×400 缩略图。
+
+    仓库不带任何图片（含深度缩略图），面板要显示深度网格就得有缩略图，
+    所以下载原图时一并生成。失败不致命：前端会退回显示原图。
+    """
+    src = os.path.join(DEPTH_IMG_DIR, stem + ".png")
+    dst = os.path.join(DEPTH_THUMB_DIR, stem + ".jpg")
+    try:
+        os.makedirs(DEPTH_THUMB_DIR, exist_ok=True)
+        with Image.open(src) as img:
+            img.load()
+            img = img.convert("L")
+            img.thumbnail((300, 400), Image.LANCZOS)
+            tmp = dst + ".part"
+            img.save(tmp, "JPEG", quality=82, optimize=True)
+        os.replace(tmp, dst)
+        return True
+    except Exception as exc:  # noqa: BLE001
+        print(f"[PoseAtlas] 深度缩略图生成失败 {stem}: {exc}")
+        return False
+
+
 try:
     from server import PromptServer
     from aiohttp import web
@@ -343,7 +367,10 @@ try:
             return web.json_response({"ok": False, "error": "索引里没有该条目"}, status=404)
 
         dest = os.path.join(DEPTH_IMG_DIR, name)
+        thumb = os.path.join(DEPTH_THUMB_DIR, stem + ".jpg")
         if os.path.isfile(dest) and os.path.getsize(dest) > 20000:
+            if not os.path.isfile(thumb):
+                _write_depth_thumb(stem)
             return web.json_response({"ok": True, "cached": True, "bytes": os.path.getsize(dest)})
 
         os.makedirs(DEPTH_IMG_DIR, exist_ok=True)
@@ -358,6 +385,7 @@ try:
         with open(tmp, "wb") as fh:
             fh.write(data)
         os.replace(tmp, dest)
+        _write_depth_thumb(stem)
         return web.json_response({"ok": True, "cached": False, "bytes": len(data)})
 
 except Exception as _exc:  # noqa: BLE001

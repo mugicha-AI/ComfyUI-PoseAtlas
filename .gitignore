@@ -1,12 +1,22 @@
-﻿# 图片资产：版权归原作者，不随仓库分发
+# 图片资产：版权归原作者，不随仓库分发（连缩略图也不带）
 web/atlas/img/*
 web/atlas/thumbs/*
+web/atlas/depth/img/*
+web/atlas/depth/thumbs/*
+web/atlas/costume/img/*
+web/atlas/costume/thumbs/*
+web/atlas/portrait/img/*
+web/atlas/portrait/thumbs/*
+
+# 但空目录要保留，clone 下来直接能跑下载脚本
 !web/atlas/img/.gitkeep
 !web/atlas/thumbs/.gitkeep
-
-# 深度原图同样不随仓库分发，只带 300x400 缩略图
-web/atlas/depth/img/*
 !web/atlas/depth/img/.gitkeep
+!web/atlas/depth/thumbs/.gitkeep
+!web/atlas/costume/img/.gitkeep
+!web/atlas/costume/thumbs/.gitkeep
+!web/atlas/portrait/img/.gitkeep
+!web/atlas/portrait/thumbs/.gitkeep
 
 # 下载临时文件
 *.part

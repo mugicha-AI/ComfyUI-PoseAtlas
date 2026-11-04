@@ -1,13 +1,16 @@
 [project]
 name = "comfyui-poseatlas"
-description = "ComfyUI node for RuiC-PoseAtlas: 288 pose groups / 1439 multi-angle mannequin references in two renders (line art + depth map), with a trilingual (中/EN/日本語) visual gallery picker. Full-size images are downloaded separately from the original sources (copyright: giaaibusi)."
-version = "1.2.0"
+description = "ComfyUI node for RuiC-PoseAtlas: three galleries — 1,439 multi-angle mannequin poses (line art + depth), 1,407 costumes and 1,499 portraits — behind a trilingual (中/EN/日本語) visual picker. No image ships with this repo; run scripts/download_images.py to fetch them (copyright: giaaibusi)."
+version = "2.0.0"
 license = { text = "MIT" }
 dependencies = []
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
+# 下载脚本缩深度缩略图时用 Pillow；ComfyUI 自带，独立环境里需要单独装
+[project.optional-dependencies]
+download = ["Pillow"]
 
 [tool.comfy]
 PublisherId = ""

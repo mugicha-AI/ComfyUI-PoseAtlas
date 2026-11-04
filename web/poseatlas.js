@@ -51,8 +51,8 @@ const UI = {
     warnTitle: "图片尚未下载。",
     warnBody:
       "图片版权归原作者所有，不随本仓库分发。<br>请在节点目录执行 " +
-      "<code style='background:#2a1e0c;padding:1px 5px;border-radius:3px'>python scripts/download_images.py</code>，" +
-      "下载完成后重启 ComfyUI。当前可以浏览分类与名称，但无法输出图片。",
+      "<code style='background:#2a1e0c;padding:1px 5px;border-radius:3px'>python scripts/download_images.py</code> " +
+      "（三套缩略图约 69 MB，加 --full 连原图），完成后重启 ComfyUI。当前可以浏览分类与名称，但无法输出图片。",
   },
   en: {
     title: "PoseAtlas Gallery",
@@ -76,7 +76,8 @@ const UI = {
     warnBody:
       "Image rights belong to the original author and are not redistributed here.<br>" +
       "Run <code style='background:#2a1e0c;padding:1px 5px;border-radius:3px'>python scripts/download_images.py</code> " +
-      "in the node directory, then restart ComfyUI. You can browse names and categories now, but cannot output images.",
+      "in the node directory (≈69 MB for all three galleries, add <code>--full</code> for originals), then restart ComfyUI. " +
+      "You can browse names and categories now, but cannot output images.",
   },
   ja: {
     title: "PoseAtlas ギャラリー",
@@ -101,7 +102,8 @@ const UI = {
       "画像の権利は原作者に帰属し、本リポジトリでは再配布していません。<br>" +
       "ノードのディレクトリで " +
       "<code style='background:#2a1e0c;padding:1px 5px;border-radius:3px'>python scripts/download_images.py</code> " +
-      "を実行し、ComfyUI を再起動してください。現在は名前と分類の閲覧のみ可能です。",
+      "を実行（3 ギャラリーのサムネイルで約 69 MB、原寸も取るなら <code>--full</code>）し、" +
+      "ComfyUI を再起動してください。現在は名前と分類の閲覧のみ可能です。",
   },
 };
 
@@ -238,48 +240,120 @@ async function getAtlas() {
 
 /* 侧栏筛选模型：每个图集用自己的维度 */
 function sideModel(atlas, coll, lang = "zh") {
+  // 竖向分类的计数必须跟着当前横向页签重算，不能读 index.json 里的静态 count
+  const entriesOf = atlas.entries.filter((e) => e.collection === coll);
+  /* 按 key 取某分类在「当前页签」下的真实数量
+   * 姿势一张卡是一个 pose（多角度合成一张卡），所以按 id 去重 */
+  const tally = (tabKey, itemKey, flow) => {
+    const seen = new Set();
+    let n = 0;
+    for (const e of entriesOf) {
+      if (tabKey && !flow.tabHit(e, tabKey)) continue;
+      if (itemKey != null && !flow.itemHit(e, itemKey)) continue;
+      if (coll === "pose") {
+        if (seen.has(e.id)) continue;
+        seen.add(e.id);
+      }
+      n++;
+    }
+    return n;
+  };
   if (coll === "pose") {
+    // 跨系列聚合侧栏分类（同名分类计数相加），「全部」页签下也能选分类
+    const agg = new Map();
+    for (const s of atlas.series) {
+      for (const c of atlas.categoriesBySeries[s.key] || []) {
+        const cur = agg.get(c.name);
+        if (cur) cur.count += c.count;
+        else agg.set(c.name, { ...c, count: c.count });
+      }
+    }
+    const totalPose = atlas.series.reduce((a, s) => a + (s.poseCount || 0), 0);
+    const flow = {
+      tabHit: (e, key) => e.series === key,
+      itemHit: (e, item) => e.category === item,
+    };
     return {
-      tabs: atlas.series.map((s) => ({
-        key: s.key,
-        name: `${(s.short_tri && s.short_tri[lang]) || s.short} (${s.poseCount})`,
-        title: (s.name_tri && s.name_tri[lang]) || s.name,
-      })),
-      items: (key) =>
-        (atlas.categoriesBySeries[key] || []).map((c) => ({
-          key: c.name, name: triName(c, lang), count: c.count,
+      tabs: [
+        { key: null, name: uiAll(lang, totalPose), title: uiAll(lang, totalPose) },
+        ...atlas.series.map((s) => ({
+          key: s.key,
+          name: `${(s.short_tri && s.short_tri[lang]) || s.short} (${s.poseCount})`,
+          title: (s.name_tri && s.name_tri[lang]) || s.name,
         })),
-      match: (e, key, item) => e.series === key && (!item || e.category === item),
+      ],
+      items: (key) =>
+        (key ? atlas.categoriesBySeries[key] || [] : [...agg.values()]).map((c) => ({
+          key: c.name,
+          name: triName(c, lang),
+          count: tally(key, c.name, flow),
+        })),
+      match: (e, key, item) =>
+        (!key || flow.tabHit(e, key)) && (!item || flow.itemHit(e, item)),
       label: { zh: "系列", en: "Series", ja: "シリーズ" }[lang],
+      totalOf: (key) => tally(key, null, flow),
     };
   }
   if (coll === "costume") {
+    const flow = {
+      tabHit: (e, key) => e.category_key === key,
+      itemHit: (e, item) => (e.group_key || e.group) === item,
+    };
+    const totalCostume = atlas.costumeCategories.reduce((a, c) => a + c.count, 0);
     return {
-      tabs: atlas.costumeCategories.map((c) => ({
-        key: c.key,
-        name: `${triName(c, lang)} (${c.count})`,
-        title: triName(c, lang),
-      })),
-      items: () => atlas.costumeGroups.map((g) => ({
-        key: g.key, name: triName(g, lang), count: g.count,
-      })),
-      match: (e, key, item) => e.category_key === key && (!item || e.group === item),
+      tabs: [
+        { key: null, name: uiAll(lang, totalCostume), title: uiAll(lang, totalCostume) },
+        ...atlas.costumeCategories.map((c) => ({
+          key: c.key,
+          name: `${triName(c, lang)} (${c.count})`,
+          title: triName(c, lang),
+        })),
+      ],
+      items: (key) =>
+        atlas.costumeGroups.map((g) => ({
+          key: g.key,
+          name: triName(g, lang),
+          count: tally(key, g.key, flow),
+        })),
+      match: (e, key, item) =>
+        (!key || flow.tabHit(e, key)) && (!item || flow.itemHit(e, item)),
       label: { zh: "季节", en: "Season", ja: "シーズン" }[lang],
+      totalOf: (key) => tally(key, null, flow),
     };
   }
+  const totalPortrait = atlas.portraitSections.reduce((a, s) => a + (s.count || 0), 0);
+  const flow = {
+    tabHit: (e, key) => e.section_key === key,
+    itemHit: (e, item) => e.hair_key === item,
+  };
   return {
-    tabs: atlas.portraitSections.map((s) => ({
-      key: s.key,
-      name: `${triName(s, lang)} (${s.count})`,
-      title: triName(s, lang),
-    })),
-    items: () => atlas.portraitHairs.map((h) => ({
-      key: h.key, name: triName(h, lang), count: h.count,
-    })),
-    match: (e, key, item) => e.section_key === key && (!item || e.hair_key === item),
+    tabs: [
+      { key: null, name: uiAll(lang, totalPortrait), title: uiAll(lang, totalPortrait) },
+      ...atlas.portraitSections.map((s) => ({
+        key: s.key,
+        name: `${triName(s, lang)} (${s.count})`,
+        title: triName(s, lang),
+      })),
+    ],
+    items: (key) =>
+      atlas.portraitHairs.map((h) => ({
+        key: h.key,
+        name: triName(h, lang),
+        count: tally(key, h.key, flow),
+      })),
+    match: (e, key, item) =>
+      (!key || flow.tabHit(e, key)) && (!item || flow.itemHit(e, item)),
     label: { zh: "分区", en: "Section", ja: "セクション" }[lang],
+    totalOf: (key) => tally(key, null, flow),
   };
 }
+
+/* 「全部」页签的文案：统一用「全部 (总数)」 */
+function uiAll(lang, total) {
+  const w = { zh: "全部", en: "All", ja: "すべて" }[lang] || "全部";
+  return total ? `${w} (${total.toLocaleString()})` : w;
+}
+
 
 const CSS = `
 .pa-overlay {
@@ -445,7 +519,7 @@ function openGallery(node, widget, atlas) {
       state.item = cur.category;
     } else if (cur.collection === "costume") {
       state.tab = cur.category_key;
-      state.item = cur.group;
+      state.item = cur.group_key || cur.group;
     } else {
       state.tab = cur.section_key;
       state.item = cur.hair_key;
@@ -646,8 +720,9 @@ function openGallery(node, widget, atlas) {
   function renderSide() {
     $side.innerHTML = "";
     const m = sideModel(atlas, collKey(state.collection), state.lang);
-    const items = state.tab ? m.items(state.tab) : [];
-    const total = items.reduce((a, c) => a + c.count, 0);
+    // state.tab 为 null（全部）时也要列分类，items(null) 已支持
+    const items = m.items(state.tab);
+    const total = m.totalOf ? m.totalOf(state.tab) : items.reduce((a, c) => a + c.count, 0);
 
     const hd = document.createElement("div");
     hd.className = "pa-side-hd";
@@ -664,6 +739,8 @@ function openGallery(node, widget, atlas) {
     $side.appendChild(all);
 
     for (const it of items) {
+      // 当前页签下该分类没有条目就不列出来（避免点了空）
+      if (!it.count) continue;
       const el = document.createElement("div");
       el.className = "pa-cat" + (state.item === it.key ? " on" : "");
       el.innerHTML = `<span>${it.name}</span><span class="n">${it.count}</span>`;
@@ -688,8 +765,8 @@ function openGallery(node, widget, atlas) {
         ].filter(Boolean).join(" ").toLowerCase();
         return hay.includes(q);
       }
-      if (state.tab && !m.match(e, state.tab, state.item)) return false;
-      return true;
+      // tab 为 null 表示「全部」：仍按侧栏分类过滤
+      return m.match(e, state.tab, state.item);
     });
   }
 
